@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { HOMEPAGE_ASSETS } from '../data/homepageAssets';
 
 // GREEN DOUBLE-CHECKMARK ICON FOR CHECKLIST ITEMS
 function DoubleCheckIcon({ size = 16, color = "#10B981" }) {
@@ -11,53 +12,12 @@ function DoubleCheckIcon({ size = 16, color = "#10B981" }) {
   );
 }
 
-// SOLID/FILLED ICONS FOR THE 5 ENTERPRISE VERTICALS
-function BankIcon({ size = 26, color = "#3488FF" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M12 2L2 7v2h20V7L12 2zm-8 8v8h3v-8H4zm6 0v8h4v-8h-4zm7 0v8h3v-8h-3zM2 20v2h20v-2H2z"/>
-    </svg>
-  );
-}
-
-function HeartHandIcon({ size = 26, color = "#3488FF" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35zM11 7h2v2h2v2h-2v2h-2v-2H9V9h2V7z"/>
-    </svg>
-  );
-}
-
-function AntennaIcon({ size = 26, color = "#3488FF" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M12 3a9 9 0 0 0-9 9h2a7 7 0 0 1 14 0h2a9 9 0 0 0-9-9zm0 4a5 5 0 0 0-5 5h2a3 3 0 0 1 6 0h2a5 5 0 0 0-5-5zm-1 7h2v7h-2v-7z"/>
-    </svg>
-  );
-}
-
-function StoreIcon({ size = 26, color = "#3488FF" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M20 4H4v2h16V4zm1 10v-2l-1-5H4L3 12v2h1v6h12v-6h4zm-10 6H6v-4h5v4z"/>
-    </svg>
-  );
-}
-
-function FactoryIcon({ size = 26, color = "#3488FF" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M22 22H2V10l7 3V10l7 3V4h6v18zM12 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
-    </svg>
-  );
-}
-
 export default function IndustriesSection({ onSelectIndustry }) {
   // ROW 1: BFSI (358px width) & Healthcare (Fills remaining space)
   const bfsiCard = {
     id: 'bfsi',
     title: 'BFSI',
-    Icon: BankIcon,
+    icon: HOMEPAGE_ASSETS.industries.BFSI,
     tags: 'Digital banking • Risk Management • Regulatory Compliance',
     outcomes: [
       'Faster regulatory compliance',
@@ -69,7 +29,7 @@ export default function IndustriesSection({ onSelectIndustry }) {
   const healthcareCard = {
     id: 'healthcare',
     title: 'Healthcare',
-    Icon: HeartHandIcon,
+    icon: HOMEPAGE_ASSETS.industries.Healthcare,
     tags: 'Clinical Systems • Patient Analytics • Care Coordination • Operational Efficiency',
     outcomes: [
       'Unified patient operations',
@@ -84,7 +44,7 @@ export default function IndustriesSection({ onSelectIndustry }) {
     {
       id: 'telecom',
       title: 'Telecom',
-      Icon: AntennaIcon,
+      icon: HOMEPAGE_ASSETS.industries.Telecom,
       tags: 'Network Operations • Customer Analytics • Billing Systems • Service Automation',
       outcomes: [
         'Faster incident resolution',
@@ -96,7 +56,7 @@ export default function IndustriesSection({ onSelectIndustry }) {
     {
       id: 'retail',
       title: 'Retail',
-      Icon: StoreIcon,
+      icon: HOMEPAGE_ASSETS.industries.Retail,
       tags: 'Supply Chain • Demand Forecasting • Customer Intelligence • Omnichannel Commerce',
       outcomes: [
         'Optimized inventory',
@@ -108,7 +68,7 @@ export default function IndustriesSection({ onSelectIndustry }) {
     {
       id: 'manufacturing',
       title: 'Manufacturing',
-      Icon: FactoryIcon,
+      icon: HOMEPAGE_ASSETS.industries.Manufacturing,
       tags: 'Production Planning • Quality Management • Predictive Maintenance • Supply Chain',
       outcomes: [
         'Faster regulatory compliance',
@@ -120,16 +80,17 @@ export default function IndustriesSection({ onSelectIndustry }) {
   ];
 
   const renderCard = (card, customClass = '') => {
-    const { id, title, Icon, tags, outcomes } = card;
+    const { id, title, icon, tags, outcomes } = card;
     return (
       <div 
         key={id} 
         className={`bento-card ${customClass}`}
+        data-reveal-child
         onClick={() => onSelectIndustry && onSelectIndustry(card)}
       >
         {/* 1. Icon Box: 56x56px light blue (#EAF2FF) rounded-xl, solid #3488FF glyph inside */}
         <div className="bento-icon-box">
-          <Icon size={26} color="#3488FF" />
+          <img src={icon} alt="" width={26} height={26} />
         </div>
 
         {/* 2. Title: H3, #0F172A, Bold */}
@@ -162,7 +123,7 @@ export default function IndustriesSection({ onSelectIndustry }) {
       <div className="container">
         
         {/* HEADER — OUTSIDE THE CONTAINER ON WHITE PAGE */}
-        <div className="section-header-row">
+        <div className="section-header-row" data-reveal>
           <div className="header-left">
             <div className="eyetray-badge">
               <span className="dot" />
@@ -189,7 +150,12 @@ export default function IndustriesSection({ onSelectIndustry }) {
         </div>
 
         {/* BENTO GRID OUTER CONTAINER: Light gray #EEF0F4, 32px rounded */}
-        <div className="bento-grid-outer-box">
+        <div
+          className="bento-grid-outer-box"
+          data-reveal-stagger="0.1"
+          data-reveal-y="24"
+          data-reveal-duration="0.55"
+        >
           
           {/* ROW 1: BFSI (358px width) & Healthcare (Fills remaining space) */}
           <div className="bento-row bento-row-1">
@@ -321,8 +287,14 @@ export default function IndustriesSection({ onSelectIndustry }) {
           height: 100%;
           box-sizing: border-box;
           cursor: pointer;
-          transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
           box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+          transition: box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+          .bento-card:hover {
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+          }
         }
 
         .card-bfsi {
@@ -331,12 +303,6 @@ export default function IndustriesSection({ onSelectIndustry }) {
 
         .card-healthcare {
           width: 100%;
-        }
-
-        .bento-card:hover {
-          transform: translateY(-4px);
-          border-color: #3488FF;
-          box-shadow: 0 12px 30px rgba(52, 136, 255, 0.08);
         }
 
         /* 1. ICON BOX: 56x56px light blue (#EAF2FF) rounded-xl */

@@ -1,101 +1,44 @@
-import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ClientLogoStrip from './components/ClientLogoStrip';
-import CaseStudiesSection from './components/CaseStudiesSection';
-import ServicesSection from './components/ServicesSection';
-import AIProductsSection from './components/AIProductsSection';
-import IndustriesSection from './components/IndustriesSection';
-import WhyUsSection from './components/WhyUsSection';
-import TestimonialsSection from './components/TestimonialsSection';
-import InsightsSection from './components/InsightsSection';
-import CTABanner from './components/CTABanner';
-import Footer from './components/Footer';
-import DemoModal from './components/DemoModal';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import SmoothScroll from './components/SmoothScroll';
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import ProfilePage from './pages/ProfilePage';
+import CaseStudiesPage from './pages/CaseStudiesPage';
+import CaseStudyDetailPage from './pages/CaseStudyDetailPage';
+import CareersPage from './pages/CareersPage';
+import CareerDetailPage from './pages/CareerDetailPage';
+import BlogPage from './pages/BlogPage';
+import BlogPostPage from './pages/BlogPostPage';
+import ContactPage from './pages/ContactPage';
+import ProductsPage from './pages/ProductsPage';
+import ProductDetailPage from './pages/ProductDetailPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import SolutionDetailPage from './pages/SolutionDetailPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedSolution, setSelectedSolution] = useState(null);
-
-  const handleOpenDemo = (solution = null) => {
-    setSelectedSolution(solution);
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedSolution(null);
-  };
-
-  const handleNavigate = (target) => {
-    const el = document.getElementById(target);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="app-root">
-      <Navbar onRequestDemo={() => handleOpenDemo()} onNavigate={handleNavigate} />
-      
-      <main>
-        {/* 1. Hero Section */}
-        <Hero 
-          onDiscussChallenge={() => handleOpenDemo()} 
-          onExploreSolutions={() => handleNavigate('solutions')} 
-        />
-        
-        {/* 2. Trust Section (Client Logo Strip) */}
-        <ClientLogoStrip />
-        
-        {/* 3. Case Studies Section (Immediately after Trust Section) */}
-        <CaseStudiesSection 
-          onSelectCaseStudy={(cs) => handleOpenDemo({ title: cs.title })}
-        />
-
-        {/* 4. Services Section */}
-        <ServicesSection 
-          onSelectService={(service) => handleOpenDemo({ title: service.title })}
-          onExploreSolutions={() => handleNavigate('solutions')}
-        />
-
-        {/* 5. AI Products Section */}
-        <AIProductsSection 
-          onSelectProduct={(product) => handleOpenDemo({ title: product.title })}
-        />
-
-        {/* 6. Industries Section */}
-        <IndustriesSection 
-          onSelectIndustry={(ind) => handleOpenDemo({ title: ind.name })}
-        />
-        
-        {/* 7. Why Pirai Proof Section */}
-        <WhyUsSection />
-        
-        {/* 8. Client Voices / Testimonials Section */}
-        <TestimonialsSection />
-        
-        {/* 9. Insights / Blog Section */}
-        <InsightsSection onNavigate={handleNavigate} />
-        
-        {/* 10. Closing CTA Banner */}
-        <CTABanner 
-          onDiscussChallenge={() => handleOpenDemo()} 
-          onExploreSolutions={() => handleNavigate('solutions')} 
-        />
-      </main>
-
-      {/* 11. Footer */}
-      <Footer onNavigate={handleNavigate} />
-
-      {/* Consultation Modal */}
-      <DemoModal 
-        isOpen={modalOpen} 
-        onClose={handleCloseModal} 
-        selectedSolution={selectedSolution} 
-      />
-    </div>
+    <BrowserRouter>
+      <SmoothScroll>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/profile/:slug" element={<ProfilePage />} />
+          <Route path="/case-studies" element={<CaseStudiesPage />} />
+          <Route path="/case-studies/:slug" element={<CaseStudyDetailPage />} />
+          <Route path="/careers" element={<CareersPage />} />
+          <Route path="/careers/:slug" element={<CareerDetailPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:slug" element={<ProductDetailPage />} />
+          <Route path="/solutions/:slug" element={<SolutionDetailPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </SmoothScroll>
+    </BrowserRouter>
   );
 }

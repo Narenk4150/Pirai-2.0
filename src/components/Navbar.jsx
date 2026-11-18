@@ -1,8 +1,37 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Plus, Minus, ArrowUpRight, X, Menu } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { X, Menu } from 'lucide-react';
 import Button from './Button';
+import { getSolutionIdFromLabel } from '../data/solutions';
+
+const PAGE_ROUTES = {
+  home: '/',
+  about: '/about',
+  'about-us': '/about',
+  company: '/about',
+  'why-pirai': '/about',
+  casestudies: '/case-studies',
+  'case-studies': '/case-studies',
+  careers: '/careers',
+  blog: '/blog',
+  insights: '/blog',
+  contact: '/contact',
+  products: '/products',
+  privacy: '/privacy',
+  'intelligent-automation': '/solutions/intelligent-automation',
+  'enterprise-solutions': '/solutions/enterprise-solutions',
+  'cloud-platforms': '/solutions/cloud-platforms',
+};
+
+const SECTION_TARGETS = new Set([
+  'solutions',
+  'industries',
+  'leadership',
+]);
 
 export default function Navbar({ onRequestDemo, onNavigate }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // Default closed, user can click or hover
   const navRef = useRef(null);
@@ -18,12 +47,43 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const scrollToTarget = (target) => {
+    if (target === 'home') {
+      if (window.__piraiLenis) window.__piraiLenis.scrollTo(0);
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    if (window.__piraiLenis) {
+      const el = document.getElementById(target);
+      if (el) window.__piraiLenis.scrollTo(el, { offset: -90 });
+      return;
+    }
+    const el = document.getElementById(target);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const handleLinkClick = (target) => {
     setActiveDropdown(null);
     setMobileMenuOpen(false);
-    if (onNavigate) {
-      onNavigate(target);
+
+    if (PAGE_ROUTES[target]) {
+      navigate(PAGE_ROUTES[target]);
+      onNavigate?.(target);
+      return;
     }
+
+    if (SECTION_TARGETS.has(target)) {
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => scrollToTarget(target), 80);
+      } else {
+        scrollToTarget(target);
+      }
+      onNavigate?.(target);
+      return;
+    }
+
+    onNavigate?.(target);
   };
 
   // Rule 2: Click to toggle open/close dropdown
@@ -40,7 +100,7 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
     if (hasDropdown) {
       setActiveDropdown(id);
     } else {
-      setActiveDropdown(null); // Close dropdown when hovering over Company or Case study
+      setActiveDropdown(null);
     }
   };
 
@@ -94,23 +154,79 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
         ]
       },
       valProp: "Deploy Production Ready AI Tools Engineered To Automate Complex Enterprise Workflows Safely And At Scale."
-    }
+    },
+    company: {
+      col1: {
+        header: 'COMPANY ↗',
+        items: [
+          'About Us',
+          'Careers',
+          'Insights',
+          'Contact',
+          'Case Studies',
+        ],
+      },
+      col2: {
+        header: 'EXPLORE ↗',
+        items: [
+          'Why Pirai',
+          'Leadership',
+          'Open Roles',
+          'Privacy Policy',
+          'Enquire',
+        ],
+      },
+      valProp:
+        'Pirai Is An Enterprise Engineering Partner Helping Regulated Organizations Build Reliable Systems, Operational Intelligence And Production-Ready AI.',
+      spotlight: {
+        title: 'Build With Teams Who Ship',
+        desc: 'From Product Design To Platform Engineering — Join The People Building Systems Enterprises Depend On Every Day.',
+        footer: 'Careers At Pirai • Open Roles',
+        target: 'careers',
+        image: '/images/careers/culture-1.png',
+      },
+    },
   };
 
   const navLinks = [
     { id: 'solutions', label: 'Solutions', hasDropdown: true, target: 'solutions' },
-    { id: 'products', label: 'Products', hasDropdown: true, target: 'products' },
-    { id: 'company', label: 'Company', hasDropdown: false, target: 'why-pirai' },
+    { id: 'products', label: 'Products', hasDropdown: true, target: 'products', navigateOnClick: true },
+    { id: 'company', label: 'Company', hasDropdown: true, target: 'about' },
     { id: 'casestudies', label: 'Case study', hasDropdown: false, target: 'casestudies' },
   ];
+
+  const companyLinkTargets = {
+    'About Us': 'about',
+    Careers: 'careers',
+    Insights: 'blog',
+    Contact: 'contact',
+    'Case Studies': 'casestudies',
+    'Why Pirai': 'about',
+    Leadership: 'about',
+    'Open Roles': 'careers',
+    'Privacy Policy': 'privacy',
+    Enquire: 'contact',
+  };
+
+  const defaultSpotlight = {
+    title: 'From POC To Production: Scaling AI',
+    desc: 'How We Take Enterprise AI Concepts And Transition Them Into High-Performance Operational Infrastructure.',
+    footer: 'Engineering Perspectives • 5 Min Read',
+    target: 'blog',
+    image: '/images/featured_insight.png',
+  };
 
   return (
     <header className="custom-glass-navbar-header mega-menu-glass-panel-header" ref={navRef}>
       <div className="container navbar-container">
         
-        {/* Logo (Left): Solid Blue Typography Logo reading "Pirai" */}
+        {/* Logo (Left): Pirai brand mark */}
         <div className="brand-logo" onClick={() => handleLinkClick('home')}>
-          <span className="logo-blue-text">Pirai</span>
+          <img
+            src="/images/Homepage/pirai-logo.png"
+            alt="Pirai"
+            className="brand-logo-img"
+          />
         </div>
 
         {/* Center Nav Links: Solutions –, Products +, Company +, Case study + */}
@@ -124,24 +240,37 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
                 onMouseEnter={() => handleNavMouseEnter(item.id, item.hasDropdown)}
               >
                 <button
-                  className={`custom-glass-nav-link ${isOpen ? 'active' : ''}`}
-                  onClick={() => handleNavClick(item.id, item.hasDropdown, item.target)}
+                  className={`custom-glass-nav-link ${isOpen ? 'active' : ''} ${location.pathname.startsWith('/case-studies') && item.id === 'casestudies' ? 'active' : ''} ${location.pathname === '/about' && item.id === 'company' ? 'active' : ''}`}
+                  onClick={() => {
+                    if (item.navigateOnClick) {
+                      handleLinkClick(item.target);
+                      return;
+                    }
+                    handleNavClick(item.id, item.hasDropdown, item.target);
+                  }}
                 >
                   <span>{item.label}</span>
-                  {item.hasDropdown && (
+                  {(item.hasDropdown || item.showPlus) && (
                     <span className="indicator-symbol">
-                      {isOpen ? '–' : '+'}
+                      {item.hasDropdown && isOpen ? '–' : '+'}
                     </span>
                   )}
                 </button>
+
               </div>
             );
           })}
         </nav>
 
-        {/* Right CTA Button ("Enquire Now" with GSAP text swap-slide scroll animation, 48px height) */}
+        {/* Right CTA — Figma: 180×48, #EEF0F4, radius 8, dark text, no arrow */}
         <div className="nav-actions">
-          <Button variant="type3" size="standard" showArrow={false} onClick={onRequestDemo}>
+          <Button
+            variant="type2"
+            size="standard"
+            showArrow={false}
+            className="btn-enquire-nav"
+            onClick={onRequestDemo}
+          >
             Enquire Now
           </Button>
 
@@ -158,7 +287,7 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
       </div>
 
       {/* FULL PAGE MEGA DROPDOWN PANEL */}
-      {activeDropdown && (activeDropdown === 'solutions' || activeDropdown === 'products') && (
+      {(activeDropdown === 'solutions' || activeDropdown === 'products' || activeDropdown === 'company') && (
         <div className="full-page-glass-mega-panel mega-menu-glass-panel">
           {/* Ambient Organic Gradient Mesh Glow Blobs */}
           <div className="ambient-dispersion-blob blob-left" />
@@ -172,9 +301,9 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           >
             <div className="mega-4col-grid">
               
-              {/* Column 1: CAPABILITIES / INTELLIGENT PRODUCTS */}
+              {/* Column 1: CAPABILITIES / INTELLIGENT PRODUCTS / COMPANY */}
               <div className="mega-col">
-                <div className="col-label-row" onClick={() => handleLinkClick(activeDropdown)}>
+                <div className="col-label-row" onClick={() => handleLinkClick(activeDropdown === 'company' ? 'about' : activeDropdown)}>
                   <span>{megaMenuData[activeDropdown].col1.header}</span>
                 </div>
                 <div className="col-links-stack">
@@ -182,7 +311,37 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
                     <div 
                       key={idx} 
                       className={`mega-link-item ${name === 'CAPABILITIES' ? 'sub-category-header' : ''}`}
-                      onClick={() => handleLinkClick(activeDropdown)}
+                      onClick={() => {
+                        if (activeDropdown === 'products') {
+                          const slug = name.toLowerCase().replace(/\s+/g, '-');
+                          const known = ['contract-genie', 'ai-mrp', 'sense-guard'];
+                          if (known.includes(slug)) {
+                            navigate(`/products/${slug}`);
+                            setActiveDropdown(null);
+                            return;
+                          }
+                          handleLinkClick('products');
+                          return;
+                        }
+                        if (activeDropdown === 'solutions') {
+                          const solutionId = getSolutionIdFromLabel(name);
+                          if (solutionId) {
+                            navigate(`/solutions/${solutionId}`);
+                            setActiveDropdown(null);
+                            return;
+                          }
+                        }
+                        if (activeDropdown === 'company') {
+                          if (name === 'Contact') {
+                            setActiveDropdown(null);
+                            onRequestDemo?.();
+                            return;
+                          }
+                          handleLinkClick(companyLinkTargets[name] || 'about');
+                          return;
+                        }
+                        handleLinkClick(activeDropdown);
+                      }}
                     >
                       {name}
                     </div>
@@ -190,9 +349,9 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
                 </div>
               </div>
 
-              {/* Column 2: INDUSTRIES / OPERATIONAL AI */}
+              {/* Column 2: INDUSTRIES / OPERATIONAL AI / EXPLORE */}
               <div className="mega-col">
-                <div className="col-label-row" onClick={() => handleLinkClick(activeDropdown)}>
+                <div className="col-label-row" onClick={() => handleLinkClick(activeDropdown === 'company' ? 'about' : activeDropdown)}>
                   <span>{megaMenuData[activeDropdown].col2.header}</span>
                 </div>
                 <div className="col-links-stack">
@@ -200,7 +359,18 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
                     <div 
                       key={idx} 
                       className="mega-link-item"
-                      onClick={() => handleLinkClick('industries')}
+                      onClick={() => {
+                        if (activeDropdown === 'company') {
+                          if (name === 'Enquire' || name === 'Contact') {
+                            setActiveDropdown(null);
+                            onRequestDemo?.();
+                            return;
+                          }
+                          handleLinkClick(companyLinkTargets[name] || 'about');
+                          return;
+                        }
+                        handleLinkClick(activeDropdown === 'products' ? 'products' : 'industries');
+                      }}
                     >
                       {name}
                     </div>
@@ -214,22 +384,26 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
                   <span>SPOTLIGHT</span>
                   <span className="arrow-icon">↗</span>
                 </div>
-                <div className="spotlight-card-wrapper" onClick={() => handleLinkClick('insights')}>
-                  <h4 className="spotlight-title">From POC To Production: Scaling AI</h4>
-                  <p className="spotlight-desc">
-                    How We Take Enterprise AI Concepts And Transition Them Into High-Performance Operational Infrastructure.
-                  </p>
-                  <div className="spotlight-img-box">
-                    <img 
-                      src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" 
-                      alt="Architectural Concrete AI" 
-                      className="spotlight-img"
-                    />
-                  </div>
-                  <div className="spotlight-footer">
-                    Engineering Perspectives • 5 Min Read
-                  </div>
-                </div>
+                {(() => {
+                  const spotlight = megaMenuData[activeDropdown].spotlight || defaultSpotlight;
+                  return (
+                    <div
+                      className="spotlight-card-wrapper"
+                      onClick={() => handleLinkClick(spotlight.target)}
+                    >
+                      <h4 className="spotlight-title">{spotlight.title}</h4>
+                      <p className="spotlight-desc">{spotlight.desc}</p>
+                      <div className="spotlight-img-box">
+                        <img
+                          src={spotlight.image}
+                          alt=""
+                          className="spotlight-img"
+                        />
+                      </div>
+                      <div className="spotlight-footer">{spotlight.footer}</div>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Column 4: Context Panel / Brand Value Statement (Vertical Border Separated) */}
@@ -257,13 +431,24 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
         <div className="mobile-drawer">
           <div className="mobile-link" onClick={() => handleLinkClick('solutions')}>Solutions</div>
           <div className="mobile-link" onClick={() => handleLinkClick('products')}>Products</div>
-          <div className="mobile-link" onClick={() => handleLinkClick('why-pirai')}>Company</div>
+          <div className="mobile-link" onClick={() => handleLinkClick('about')}>Company / About Us</div>
+          <div className="mobile-link" onClick={() => handleLinkClick('careers')}>Careers</div>
+          <div className="mobile-link" onClick={() => handleLinkClick('blog')}>Insights</div>
+          <div
+            className="mobile-link"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              onRequestDemo?.();
+            }}
+          >
+            Contact
+          </div>
           <div className="mobile-link" onClick={() => handleLinkClick('casestudies')}>Case study</div>
           <Button 
-            variant="type3" 
+            variant="type2" 
             size="standard" 
             showArrow={false}
-            style={{ width: '100%', marginTop: '12px' }}
+            style={{ width: '100%', marginTop: '12px', borderRadius: '8px' }}
             onClick={() => { setMobileMenuOpen(false); onRequestDemo(); }}
           >
             Enquire Now
@@ -301,7 +486,7 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           left: 0;
           right: 0;
           z-index: 1000;
-          height: 80px;
+          height: 100px;
           display: flex;
           align-items: center;
         }
@@ -311,8 +496,8 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           align-items: center;
           justify-content: space-between;
           width: 100%;
-          padding: 0 48px;
-          max-width: 1440px;
+          padding: 0 40px;
+          max-width: 1280px;
           margin: 0 auto;
         }
 
@@ -320,42 +505,53 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           cursor: pointer;
           display: flex;
           align-items: center;
+          height: 32px;
+          flex-shrink: 0;
+        }
+
+        .brand-logo-img {
+          height: 28px;
+          width: auto;
+          max-width: 110px;
+          display: block;
+          object-fit: contain;
         }
 
         .logo-blue-text {
           font-family: 'Poppins', sans-serif;
-          font-size: 32px;
+          font-size: 28px;
           font-weight: 700;
           color: #3488FF;
           letter-spacing: -0.5px;
+          line-height: 1;
         }
 
         .desktop-center-nav {
           display: flex;
           align-items: center;
-          gap: 36px;
+          gap: 40px;
         }
 
         .nav-item-wrapper {
           position: relative;
-          height: 80px;
+          height: 100px;
           display: flex;
           align-items: center;
         }
 
         .custom-glass-nav-link {
           font-family: 'Poppins', sans-serif;
-          font-size: 15px;
-          font-weight: 500;
-          color: #1E293B;
+          font-size: 14px;
+          font-weight: 400;
+          color: #475569;
           background: none;
           border: none;
           cursor: pointer;
           display: flex;
           align-items: center;
-          gap: 6px;
-          padding: 6px 10px;
-          border-radius: 6px;
+          gap: 4px;
+          padding: 0;
+          border-radius: 0;
           transition: color 0.2s ease;
         }
 
@@ -364,9 +560,10 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
         }
 
         .indicator-symbol {
-          font-size: 15px;
+          font-size: 14px;
           font-weight: 400;
-          color: #64748B;
+          color: #475569;
+          line-height: 1;
         }
 
         .custom-glass-nav-link:hover .indicator-symbol, .custom-glass-nav-link.active .indicator-symbol {
@@ -385,8 +582,8 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           top: 100%;
           left: 0;
           right: 0;
-          height: calc(100vh - 80px);       /* Full page viewport height */
-          min-height: calc(100vh - 80px);   /* Full page dropdown overlay */
+          height: calc(100vh - 100px);
+          min-height: calc(100vh - 100px);
           overflow-y: auto;
           animation: fullPageGlassSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           display: flex;

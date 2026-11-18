@@ -2,8 +2,9 @@ import React from 'react';
 import { Clock, Calendar } from 'lucide-react';
 import Button from './Button';
 
-export default function InsightsSection({ onNavigate }) {
+export default function InsightsSection({ onNavigate, onSelectPost }) {
   const featuredArticle = {
+    id: 'poc-to-production-ai',
     title: "From POC to Production: Scaling AI in Enterprise Operations",
     excerpt: "Key considerations for moving AI initiatives from pilot to production-grade systems",
     date: "May 15, 2026",
@@ -14,6 +15,7 @@ export default function InsightsSection({ onNavigate }) {
 
   const smallArticles = [
     {
+      id: 'kubernetes-enterprise-scale',
       title: "Kubernetes at Enterprise Scale",
       date: "Jun 28, 2026",
       readTime: "4 min read",
@@ -21,6 +23,7 @@ export default function InsightsSection({ onNavigate }) {
       image: "/images/insight_kubernetes.png"
     },
     {
+      id: 'modernizing-legacy-systems',
       title: "Modernizing Legacy Systems",
       date: "Jun 20, 2026",
       readTime: "6 min read",
@@ -28,6 +31,7 @@ export default function InsightsSection({ onNavigate }) {
       image: "/images/insight_legacy.png"
     },
     {
+      id: 'roi-of-ai-automation',
       title: "ROI of AI Automation",
       date: "Jun 19, 2026",
       readTime: "10 min read",
@@ -35,6 +39,7 @@ export default function InsightsSection({ onNavigate }) {
       image: "/images/insight_roi.png"
     },
     {
+      id: 'scaling-ai-web-apps',
       title: "Production: Scaling AI Web Apps",
       date: "Jun 06, 2026",
       readTime: "9 min read",
@@ -47,31 +52,50 @@ export default function InsightsSection({ onNavigate }) {
     <section className="insights-section" id="insights">
       <div className="container">
         {/* Top Header Row */}
-        <div className="insights-header">
+        <div className="insights-header" data-reveal>
           <div className="header-text">
             <div className="eyetray-badge">
               <span className="dot" />
               <span>Insights</span>
             </div>
             <h2 className="section-h2">
-              Engineering Perspectives
+              Engineering <span className="blue-accent">Perspectives</span>
             </h2>
             <p className="section-body header-body">
               Deep domain understanding across five enterprise verticals.
             </p>
           </div>
 
-          <Button variant="secondary" onClick={() => onNavigate && onNavigate('insights')}>
+          <Button variant="type2" size="standard" onClick={() => onNavigate && onNavigate('insights')}>
             View all
           </Button>
         </div>
 
         {/* Main Insights Layout */}
-        <div className="insights-two-col-layout">
+        <div
+          className="insights-two-col-layout"
+          data-reveal-stagger="0.1"
+          data-reveal-y="28"
+          data-reveal-duration="0.6"
+        >
           {/* Left Large Featured Card */}
-          <div className="featured-card">
+          <div
+            className="featured-card"
+            data-reveal-child
+            role="link"
+            tabIndex={0}
+            onClick={() => onSelectPost?.(featuredArticle.id)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') onSelectPost?.(featuredArticle.id);
+            }}
+          >
             <div className="featured-image-box">
-              <img src={featuredArticle.image} alt={featuredArticle.title} className="featured-img" />
+              <img
+                src={featuredArticle.image}
+                alt={featuredArticle.title}
+                className="featured-img"
+                data-reveal-img="1.05"
+              />
               <span className="tag-pill category-tag-overlay">{featuredArticle.category}</span>
             </div>
 
@@ -94,11 +118,25 @@ export default function InsightsSection({ onNavigate }) {
           </div>
 
           {/* Right 2x2 Grid */}
-          <div className="small-cards-grid">
-            {smallArticles.map((article, idx) => (
-              <div key={idx} className="small-card">
+          <div className="small-cards-grid" data-reveal-child>
+            {smallArticles.map((article) => (
+              <div
+                key={article.id}
+                className="small-card"
+                role="link"
+                tabIndex={0}
+                onClick={() => onSelectPost?.(article.id)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') onSelectPost?.(article.id);
+                }}
+              >
                 <div className="small-card-img-box">
-                  <img src={article.image} alt={article.title} className="small-img" />
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="small-img"
+                    data-reveal-img="1.05"
+                  />
                   <span className="tag-pill small-tag-overlay">{article.category}</span>
                 </div>
 
@@ -136,8 +174,23 @@ export default function InsightsSection({ onNavigate }) {
           max-width: 680px;
         }
 
-        .header-body {
+        .insights-section .section-h2 {
+          font-family: 'Poppins', sans-serif;
+          font-size: 40px;
+          line-height: 50px;
+          font-weight: 600;
+          color: #0F172A;
+        }
+
+        .blue-accent {
+          color: var(--primary);
+        }
+
+        .insights-section .header-body {
           margin-top: 12px;
+          font-family: 'Poppins', sans-serif;
+          font-size: 16px;
+          line-height: 26px;
         }
 
         .insights-two-col-layout {
@@ -148,17 +201,16 @@ export default function InsightsSection({ onNavigate }) {
         }
 
         .featured-card {
-          background: var(--surface-alt);
-          border: 1px solid var(--border);
+          background: transparent;
+          border: none;
           border-radius: 24px;
           padding: 20px;
           display: flex;
           flex-direction: column;
-          transition: border-color 0.2s ease, transform 0.2s ease;
+          transition: transform 0.2s ease;
         }
 
         .featured-card:hover {
-          border-color: var(--primary);
           transform: translateY(-2px);
         }
 
@@ -189,6 +241,7 @@ export default function InsightsSection({ onNavigate }) {
         }
 
         .featured-title {
+          font-family: 'Poppins', sans-serif;
           font-size: 20px;
           font-weight: 600;
           color: var(--heading);
@@ -196,9 +249,10 @@ export default function InsightsSection({ onNavigate }) {
         }
 
         .featured-body-text {
-          font-size: 14px;
+          font-family: 'Poppins', sans-serif;
+          font-size: 16px;
           color: var(--body);
-          line-height: 1.55;
+          line-height: 26px;
         }
 
         .article-meta-row {
@@ -227,18 +281,17 @@ export default function InsightsSection({ onNavigate }) {
         }
 
         .small-card {
-          background: var(--surface-alt);
-          border: 1px solid var(--border);
+          background: transparent;
+          border: none;
           border-radius: 20px;
           padding: 16px;
           display: flex;
           flex-direction: column;
           gap: 14px;
-          transition: border-color 0.2s ease, transform 0.2s ease;
+          transition: transform 0.2s ease;
         }
 
         .small-card:hover {
-          border-color: var(--primary);
           transform: translateY(-2px);
         }
 
@@ -268,7 +321,8 @@ export default function InsightsSection({ onNavigate }) {
         }
 
         .small-card-title {
-          font-size: 15px;
+          font-family: 'Poppins', sans-serif;
+          font-size: 16px;
           font-weight: 600;
           color: var(--heading);
           line-height: 1.35;

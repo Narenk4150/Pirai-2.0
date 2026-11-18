@@ -56,18 +56,27 @@ h1.hero-h1 {
   color: var(--primary);
 }
 
-h2.section-h2 {
-  font-size: 36px;
-  line-height: 44px;
+h2.section-h2,
+h2.section-h2-title {
+  font-family: var(--font-family);
+  font-size: 40px;
+  line-height: 50px;
   font-weight: 600;
   color: var(--heading);
 }
 
-.section-body {
+h3.card-h3-title,
+h3.row-title {
+  font-family: var(--font-family);
+}
+
+.section-body,
+.header-sub-text {
+  font-family: var(--font-family);
   font-size: 16px;
   font-weight: 400;
   color: var(--body);
-  line-height: 1.6;
+  line-height: 26px;
 }
 
 /* FLUID SCALABLE CONTAINER SYSTEM
@@ -99,7 +108,8 @@ h2.section-h2 {
     font-size: 38px;
     line-height: 48px;
   }
-  h2.section-h2 {
+  h2.section-h2,
+  h2.section-h2-title {
     font-size: 28px;
     line-height: 36px;
   }
@@ -112,20 +122,28 @@ h2.section-h2 {
   }
 }
 
-/* EYETRAY / BADGE PILL */
+/* EYETRAY / BADGE — Figma: h 24, radius 12, gap 10 */
 .eyetray-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 16px;
+  justify-content: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: max-content;
+  height: 24px;
+  padding: 0 10px;
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid var(--primary);
-  border-radius: 9999px;
+  border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
+  line-height: 12px;
   color: var(--primary);
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(52, 136, 255, 0.08);
+  margin-bottom: 0;
+  box-shadow: none;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  align-self: flex-start;
 }
 
 .eyetray-badge .dot {
@@ -133,6 +151,14 @@ h2.section-h2 {
   height: 6px;
   border-radius: 50%;
   background-color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Section headers still need space under the badge */
+.header-left > .eyetray-badge,
+.header-text > .eyetray-badge,
+.insights-header .eyetray-badge {
+  margin-bottom: 16px;
 }
 
 /* TAGS COMPONENT */
@@ -154,4 +180,19 @@ h2.section-h2 {
   width: 100%;
   height: 1px;
   background: var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

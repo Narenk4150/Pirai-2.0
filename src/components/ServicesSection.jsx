@@ -1,97 +1,143 @@
-import React, { useState } from 'react';
-import { Code2, Cloud, TrendingUp, ShieldCheck, MapPin } from 'lucide-react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Button from './Button';
+import { HOMEPAGE_ASSETS } from '../data/homepageAssets';
 
-// CUSTOM GLYPH FOR INTELLIGENT AUTOMATION (SERVICE 01):
-// Closed circular ring outline with 2 orbit swirl arrow strokes following the ring's curve (top-left & bottom-right), and a 4-point compass star centered inside.
-function OrbitSparkleIcon({ size = 140, color = "#3488FF", className = "" }) {
-  return (
-    <svg 
-      width={size} 
-      height={size} 
-      viewBox="0 0 48 48" 
-      fill="none" 
-      stroke={color} 
-      strokeWidth="2.2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      {/* Outer circular ring with orbit arc notches */}
-      <circle cx="24" cy="24" r="18" stroke={color} strokeWidth="2.2" strokeDasharray="30 8 28 8" />
-      {/* Top-left orbit arrow tip following curve */}
-      <path d="M 10 18 L 8 22 L 12 24" stroke={color} strokeWidth="2.2" />
-      {/* Bottom-right orbit arrow tip following curve */}
-      <path d="M 38 30 L 40 26 L 36 24" stroke={color} strokeWidth="2.2" />
-      {/* Centered 4-point compass star */}
-      <path d="M 24 14 Q 24 24 14 24 Q 24 24 34 24 Q 24 24 24 14 Z" fill="none" stroke={color} strokeWidth="1.8" />
-    </svg>
-  );
-}
+const SERVICES_LIST = [
+  {
+    id: '01',
+    title: 'Intelligent Automation',
+    description: 'Orchestrate enterprise workflows with multi-agent AI systems, document processing engines, and human-in-the-loop validation.',
+    icon: HOMEPAGE_ASSETS.services['Intelligent Automation'].icon,
+    thumbnail: HOMEPAGE_ASSETS.services['Intelligent Automation'].image,
+    tags: ['WEB DEVELOPMENT', 'DOCUMENT INTELLIGENCE', 'LLM INTEGRATIONS', 'PROCESS AUTOMATION', 'AI AGENTS']
+  },
+  {
+    id: '02',
+    title: 'Enterprise Solutions',
+    description: 'Decouple legacy monoliths and build modern event-driven enterprise architectures designed for zero-downtime operations.',
+    icon: HOMEPAGE_ASSETS.services['Enterprise Solutions'].icon,
+    thumbnail: HOMEPAGE_ASSETS.services['Enterprise Solutions'].image,
+    tags: ['BUSINESS APPLICATIONS', 'PLATFORM DEVELOPMENT', 'SYSTEM INTEGRATION', 'MOBILE APPLICATIONS']
+  },
+  {
+    id: '03',
+    title: 'Cloud Platforms',
+    description: 'Scalable Kubernetes infrastructure, automated Infrastructure-as-Code pipelines, and cost-optimized multi-cloud management.',
+    icon: HOMEPAGE_ASSETS.services['Cloud Platforms'].icon,
+    thumbnail: HOMEPAGE_ASSETS.services['Cloud Platforms'].image,
+    tags: ['CLOUD MODERNIZATION', 'DEVOPS', 'INFRASTRUCTURE AUTOMATION', 'SCALABLE DEPLOYMENTS']
+  },
+  {
+    id: '04',
+    title: 'Data & Intelligence',
+    description: 'Unified enterprise data lakes, feature store infrastructure, and real-time streaming analytics pipelines.',
+    icon: HOMEPAGE_ASSETS.services['Data & Insights'].icon,
+    thumbnail: HOMEPAGE_ASSETS.services['Data & Insights'].image,
+    tags: ['ANALYTICS', 'FORECASTING', 'OPERATIONAL DASHBOARDS', 'DECISION INTELLIGENCE']
+  },
+  {
+    id: '05',
+    title: 'Quality Engineering',
+    description: 'Site Reliability Engineering, automated chaos testing, synthetic monitoring, and self-healing infrastructure protocols.',
+    icon: HOMEPAGE_ASSETS.services['Quality Engineering'].icon,
+    thumbnail: HOMEPAGE_ASSETS.services['Quality Engineering'].image,
+    tags: ['TEST AUTOMATION', 'AI-ASSISTED QA', 'RELEASE RELIABILITY', 'PERFORMANCE ENGINEERING']
+  },
+  {
+    id: '06',
+    title: 'CTO as a Service',
+    description: 'Strategic technical leadership, architectural governance, tech stack evaluation, and digital organization scaling.',
+    icon: HOMEPAGE_ASSETS.services['CTO as a Service'].icon,
+    thumbnail: HOMEPAGE_ASSETS.services['CTO as a Service'].image,
+    tags: ['STRATEGY & ADVISORY', 'DIGITAL TRANSFORMATION', 'GOVERNANCE', 'EXECUTIVE INSIGHTS']
+  }
+];
 
 export default function ServicesSection({ onSelectService, onExploreSolutions }) {
-  const servicesList = [
-    {
-      id: '01',
-      title: 'Intelligent Automation',
-      description: 'Orchestrate enterprise workflows with multi-agent AI systems, document processing engines, and human-in-the-loop validation.',
-      icon: OrbitSparkleIcon,
-      thumbnail: '/images/hiringjet_tablet.jpg',
-      tags: ['WEB DEVELOPMENT', 'DOCUMENT INTELLIGENCE', 'LLM INTEGRATIONS', 'PROCESS AUTOMATION', 'AI AGENTS']
-    },
-    {
-      id: '02',
-      title: 'Enterprise Solutions',
-      description: 'Decouple legacy monoliths and build modern event-driven enterprise architectures designed for zero-downtime operations.',
-      icon: Code2,
-      thumbnail: '/images/beacon_monitor.jpg',
-      tags: ['BUSINESS APPLICATIONS', 'PLATFORM DEVELOPMENT', 'SYSTEM INTEGRATION', 'MOBILE APPLICATIONS']
-    },
-    {
-      id: '03',
-      title: 'Cloud Platforms',
-      description: 'Scalable Kubernetes infrastructure, automated Infrastructure-as-Code pipelines, and cost-optimized multi-cloud management.',
-      icon: Cloud,
-      thumbnail: '/images/insight_kubernetes.png',
-      tags: ['CLOUD MODERNIZATION', 'DEVOPS', 'INFRASTRUCTURE AUTOMATION', 'SCALABLE DEPLOYMENTS']
-    },
-    {
-      id: '04',
-      title: 'Data & Insights',
-      description: 'Unified enterprise data lakes, feature store infrastructure, and real-time streaming analytics pipelines.',
-      icon: TrendingUp,
-      thumbnail: '/images/bank_lending.jpg',
-      tags: ['ANALYTICS', 'FORECASTING', 'OPERATIONAL DASHBOARDS', 'DECISION INTELLIGENCE']
-    },
-    {
-      id: '05',
-      title: 'Quality Engineering',
-      description: 'Site Reliability Engineering, automated chaos testing, synthetic monitoring, and self-healing infrastructure protocols.',
-      icon: ShieldCheck,
-      thumbnail: '/images/manufacturing_laptop.jpg',
-      tags: ['TEST AUTOMATION', 'AI-ASSISTED QA', 'RELEASE RELIABILITY', 'PERFORMANCE ENGINEERING']
-    },
-    {
-      id: '06',
-      title: 'Business Transformation',
-      description: 'Strategic technical leadership, architectural governance, tech stack evaluation, and digital organization scaling.',
-      icon: MapPin,
-      thumbnail: '/images/insight_scaling.png',
-      tags: ['STRATEGY & ADVISORY', 'DIGITAL TRANSFORMATION', 'GOVERNANCE', 'EXECUTIVE INSIGHTS']
-    }
-  ];
-
   const [activeServiceId, setActiveServiceId] = useState('01');
+  const [canHover, setCanHover] = useState(true);
+  const [iconQueue, setIconQueue] = useState([SERVICES_LIST[0]]);
+  const [iconSlide, setIconSlide] = useState(0);
+  const [iconInstant, setIconInstant] = useState(false);
+  const iconResettingRef = useRef(false);
+  const iconQueueRef = useRef(iconQueue);
+  const iconSlideRef = useRef(iconSlide);
+  iconQueueRef.current = iconQueue;
+  iconSlideRef.current = iconSlide;
 
-  const activeService = servicesList.find(s => s.id === activeServiceId) || servicesList[0];
-  const ActiveIcon = activeService.icon;
+  const activeService = SERVICES_LIST.find((s) => s.id === activeServiceId) || SERVICES_LIST[0];
+  const activeIndex = Math.max(
+    0,
+    SERVICES_LIST.findIndex((s) => s.id === activeServiceId)
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const update = () => setCanHover(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  // Keep a right-to-left icon queue: outgoing exits left, incoming enters from right
+  useEffect(() => {
+    setIconQueue((prev) => {
+      const last = prev[prev.length - 1];
+      if (last?.id === activeService.id) return prev;
+      return [...prev, activeService];
+    });
+  }, [activeService]);
+
+  useLayoutEffect(() => {
+    if (iconQueue.length <= 1) {
+      setIconSlide(0);
+      return;
+    }
+    setIconInstant(false);
+    const frame = requestAnimationFrame(() => {
+      setIconSlide(iconQueue.length - 1);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [iconQueue]);
+
+  useLayoutEffect(() => {
+    if (!iconInstant) return;
+    const frame = requestAnimationFrame(() => setIconInstant(false));
+    return () => cancelAnimationFrame(frame);
+  }, [iconInstant]);
+
+  const handleIconTrackTransitionEnd = (event) => {
+    if (event.propertyName !== 'transform') return;
+    const queue = iconQueueRef.current;
+    if (queue.length <= 1 || iconResettingRef.current) return;
+    // Ignore mid-chain transition ends while more slides are still queued
+    if (iconSlideRef.current !== queue.length - 1) return;
+
+    iconResettingRef.current = true;
+    const last = queue[queue.length - 1];
+    setIconInstant(true);
+    setIconQueue([last]);
+    setIconSlide(0);
+    requestAnimationFrame(() => {
+      iconResettingRef.current = false;
+    });
+  };
+
+  const activateService = (id) => {
+    if (id !== activeServiceId) setActiveServiceId(id);
+  };
+
+  const handleRowKeyDown = (event, id) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      activateService(id);
+    }
+  };
 
   return (
     <section className="services-section-wrapper" id="solutions">
       <div className="container">
-        
-        {/* HEADER — PLACED OUTSIDE THE BOX DIRECTLY ON WHITE PAGE */}
-        <div className="section-header-row">
+        <div className="section-header-row" data-reveal>
           <div className="header-left">
             <div className="eyetray-badge">
               <span className="dot" />
@@ -107,33 +153,61 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
           </div>
 
           <div className="header-right">
-            <Button size="standard" variant="type2" onClick={onExploreSolutions}>
+            <Button size="hero" variant="type2" onClick={onExploreSolutions}>
               Explore Solutions
             </Button>
           </div>
         </div>
 
-        {/* BODY LAYOUT — TWO COLUMNS CONTAINER (~1200px TOTAL WIDTH) */}
-        <div className="services-outer-box">
-          
-          {/* LEFT PANEL: 400px width, 480px height, 32px corner radius, 16px padding on all corners */}
+        <div className="services-outer-box" data-reveal data-reveal-y="28" data-reveal-duration="0.65">
+          {/* LEFT PANEL — mirrors active service; hover does not change selection */}
           <div className="services-left-panel">
-            {/* Numeral top-left: Poppins medium italic, 20px font size, 36px left padding, 48px top padding */}
-            <span className="active-numeral">{activeService.id}</span>
-            
-            {/* Centered Icon Graphic: 140px width and height, placed 140px from top, center-aligned */}
-            <div className="icon-pure-container">
-              <div key={activeService.id} className="icon-pure-wrapper">
-                <ActiveIcon size={140} color="#3488FF" className="icon-svg-pure" />
+            <div className="numeral-viewport" aria-live="polite" aria-atomic="true">
+              <div
+                className="numeral-track"
+                style={{ transform: `translate3d(0, -${activeIndex * 20}px, 0)` }}
+              >
+                {SERVICES_LIST.map((service) => (
+                  <span key={service.id} className="numeral-item">
+                    {service.id}
+                  </span>
+                ))}
               </div>
             </div>
 
-            {/* Bottom Section with White Divider Line and Stretched Full-Width View Details CTA */}
+            <div className="icon-pure-container" aria-hidden="true">
+              <div className="icon-hover-layer">
+                <div className="icon-carousel-viewport">
+                  <div
+                    className={`icon-carousel-track${iconInstant ? ' is-instant' : ''}`}
+                    style={{ transform: `translate3d(-${iconSlide * 140}px, 0, 0)` }}
+                    onTransitionEnd={handleIconTrackTransitionEnd}
+                  >
+                    {iconQueue.map((service, index) => (
+                      <div
+                        key={`${service.id}-${index}`}
+                        className="icon-carousel-slide"
+                      >
+                        <img
+                          src={service.icon}
+                          alt=""
+                          className="icon-svg-pure"
+                          width={140}
+                          height={140}
+                          draggable={false}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="left-panel-bottom">
               <div className="divider-line" />
               <div className="btn-wrapper">
-                <Button 
-                  size="standard" 
+                <Button
+                  size="hero"
                   variant="type1"
                   fullWidth={true}
                   onClick={() => onSelectService && onSelectService(activeService)}
@@ -144,31 +218,39 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
             </div>
           </div>
 
-          {/* RIGHT COLUMN: FIXED HEIGHT 813px, Width 778px, 24px Card Padding, Card BG #EEF0F4, Corner Radius 32px */}
-          <div className="services-accordion-column">
+          {/* RIGHT PANEL — drives shared active-service state */}
+          <div
+            className="services-accordion-column"
+            role="listbox"
+            aria-label="Our services"
+            aria-activedescendant={`service-row-${activeServiceId}`}
+          >
             <div className="accordion-inner-stack">
-              {servicesList.map((service) => {
+              {SERVICES_LIST.map((service) => {
                 const isActive = service.id === activeServiceId;
                 return (
                   <div
                     key={service.id}
+                    id={`service-row-${service.id}`}
+                    role="option"
+                    aria-selected={isActive}
+                    tabIndex={0}
                     className={`accordion-row ${isActive ? 'active' : ''}`}
-                    onMouseEnter={() => setActiveServiceId(service.id)}
-                    onClick={() => setActiveServiceId(service.id)}
+                    onMouseEnter={() => {
+                      if (canHover) activateService(service.id);
+                    }}
+                    onFocus={() => activateService(service.id)}
+                    onClick={() => activateService(service.id)}
+                    onKeyDown={(event) => handleRowKeyDown(event, service.id)}
                   >
-                    {/* Row Left Content (Flush Left up to padding value) */}
                     <div className="row-content-left">
                       <div className="row-title-container">
-                        {/* Reserved 10px Circle Space Available All the Time — Fades in on hover */}
                         <span className={`active-circle-dot ${isActive ? 'show' : ''}`} />
-                        
-                        {/* Title text: Poppins Regular, 32px font size, 32px line height */}
                         <h3 className={`row-title ${isActive ? 'active-title' : ''}`}>
                           {service.title}
                         </h3>
                       </div>
 
-                      {/* Tag Pills (Aligned with starting of the title) */}
                       <div className={`row-tag-pills ${isActive ? 'show' : ''}`}>
                         {service.tags.map((tag, idx) => (
                           <span key={idx} className="accordion-tag-pill">
@@ -178,12 +260,11 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
                       </div>
                     </div>
 
-                    {/* Row Right Thumbnail Image (Flush Right up to padding value) */}
                     <div className="row-thumbnail-wrapper">
-                      <img 
-                        src={service.thumbnail} 
-                        alt={service.title} 
-                        className="row-thumbnail-img" 
+                      <img
+                        src={service.thumbnail}
+                        alt=""
+                        className="row-thumbnail-img"
                       />
                     </div>
                   </div>
@@ -191,19 +272,15 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
               })}
             </div>
           </div>
-
         </div>
-
       </div>
 
       <style>{`
-        /* PAGE WRAPPER IS WHITE */
         .services-section-wrapper {
           padding: 80px 0;
           background-color: #FFFFFF;
         }
 
-        /* HEADER ROW — OUTSIDE THE BOX DIRECTLY ON WHITE PAGE */
         .section-header-row {
           display: flex;
           align-items: flex-end;
@@ -213,7 +290,7 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
         }
 
         .header-left {
-          max-width: 680px;
+          max-width: 748px;
         }
 
         .section-h2-title {
@@ -222,7 +299,7 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
           font-weight: 600;
           line-height: 50px;
           color: #0F172A;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
 
         .blue-accent {
@@ -237,48 +314,68 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
           max-width: 600px;
         }
 
-        /* BODY CONTAINER — TWO COLUMNS LAYOUT (~1200px TOTAL WIDTH) */
         .services-outer-box {
           max-width: 1200px;
           width: 100%;
           margin: 0 auto;
           display: flex;
-          gap: 20px;
+          gap: 24px;
           box-sizing: border-box;
           align-items: flex-start;
         }
 
-        /* LEFT PANEL: 400px width, 480px height, 32px corner radius, 16px padding on all corners, stroke white */
         .services-left-panel {
-          position: relative;
+          position: sticky;
+          top: 120px;
+          align-self: flex-start;
           width: 400px;
           height: 480px;
           flex-shrink: 0;
           background: #EEF0F4;
-          border: 1.5px solid #FFFFFF; /* White stroke */
-          border-radius: 32px;         /* 32px corner radius */
+          border: 1.5px solid #FFFFFF;
+          border-radius: 32px;
           padding: 16px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
           box-sizing: border-box;
+          overflow: hidden;
+          z-index: 2;
         }
 
-        /* ACTIVE NUMERAL: Poppins medium italic, 20px font size, 36px left padding, 48px top padding */
-        .active-numeral {
+        /* Vertical scrolling counter for service numbers */
+        .numeral-viewport {
           position: absolute;
           top: 48px;
           left: 36px;
+          width: 28px;
+          height: 20px;
+          overflow: hidden;
+          z-index: 2;
+        }
+
+        .numeral-track {
+          display: flex;
+          flex-direction: column;
+          transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1);
+          will-change: transform;
+        }
+
+        .numeral-item {
+          flex: 0 0 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
           font-style: italic;
           font-size: 20px;
+          line-height: 20px;
           color: #3488FF;
-          line-height: 1;
+          user-select: none;
         }
 
-        /* ICON: 140px width and height, placed 140px from top, center-aligned */
         .icon-pure-container {
           position: absolute;
           top: 140px;
@@ -289,30 +386,56 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
           display: flex;
           align-items: center;
           justify-content: center;
+          overflow: hidden;
+          z-index: 1;
         }
 
-        .icon-pure-wrapper {
+        .icon-hover-layer {
           width: 140px;
           height: 140px;
           display: flex;
           align-items: center;
           justify-content: center;
-          animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* Horizontal RTL icon carousel */
+        .icon-carousel-viewport {
+          width: 140px;
+          height: 140px;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .icon-carousel-track {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          height: 140px;
+          transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1);
+          will-change: transform;
+        }
+
+        .icon-carousel-track.is-instant {
+          transition: none;
+        }
+
+        .icon-carousel-slide {
+          flex: 0 0 140px;
+          width: 140px;
+          height: 140px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .icon-svg-pure {
           color: #3488FF;
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: scale(0.92);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
+          width: 140px;
+          height: 140px;
+          object-fit: contain;
+          display: block;
+          pointer-events: none;
+          user-select: none;
         }
 
         .left-panel-bottom {
@@ -323,57 +446,76 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
         .divider-line {
           width: 100%;
           height: 1.5px;
-          background-color: #FFFFFF; /* White stroke divider */
-          margin-bottom: 16px;
+          background-color: #FFFFFF;
+          margin-bottom: 12px;
         }
 
         .btn-wrapper {
           width: 100%;
         }
 
-        /* RIGHT COLUMN: STRICTLY FIXED HEIGHT 813px, Width 778px, Card BG #EEF0F4, Stroke White, Corner Radius 32px */
-        .services-accordion-column {
-          width: 778px;
-          height: 813px; /* STRICTLY FIXED HEIGHT */
-          flex-shrink: 0;
-          background: #EEF0F4;
-          border: 1.5px solid #FFFFFF; /* White stroke */
-          border-radius: 32px;         /* 32px corner radius */
-          padding: 24px;              /* 24px distance between card and stroke */
-          box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
-          box-sizing: border-box;
-          overflow: hidden;
+        .btn-wrapper .figma-btn-master.size-hero {
+          width: 100%;
+          padding-left: 20px;
+          padding-right: 52px;
+          padding-bottom: 14px;
+          justify-content: flex-start;
+          align-items: flex-end;
         }
 
-        /* ACCORDION INNER CONTAINER — Fills 100% of 813px height */
+        .btn-wrapper .figma-btn-master .button-text-mask {
+          margin-right: 0;
+        }
+
+        .services-accordion-column {
+          width: 778px;
+          flex: 1 1 auto;
+          min-width: 0;
+          background: #EEF0F4;
+          border: 1.5px solid #FFFFFF;
+          border-radius: 32px;
+          padding: 24px;
+          box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
+          box-sizing: border-box;
+          overflow: visible;
+        }
+
         .accordion-inner-stack {
           width: 100%;
-          height: 100%;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: flex-start;
           background: transparent;
           border-radius: 24px;
-          overflow: hidden;
+          overflow: visible;
           border: none;
         }
 
-        /* ACCORDION ROW: Title content aligned flush left to padding, thumbnail image aligned flush right to padding */
         .accordion-row {
           display: flex;
-          align-items: center;            /* Vertically centers title content & image */
-          justify-content: space-between; /* Autolayout spacing between left content & right image */
-          padding: 0 36px;                 /* 36px horizontal padding boundary */
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 36px;
           gap: 24px;
-          border-bottom: 1.5px solid #FFFFFF; /* White stroke divider */
+          border-bottom: 1.5px solid #FFFFFF;
           cursor: pointer;
-          flex: 1;                        /* Inactive rows flex smoothly */
-          min-height: 73px;
-          transition: flex 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
+          flex: 0 0 auto;
+          height: 121px;
+          min-height: 121px;
+          transition:
+            height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+            min-height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+            padding 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+            background-color 0.3s ease;
           overflow: hidden;
           box-sizing: border-box;
           background-color: transparent;
           width: 100%;
+          outline: none;
+        }
+
+        .accordion-row:focus-visible {
+          background-color: rgba(52, 136, 255, 0.04);
         }
 
         .accordion-row:last-child {
@@ -381,12 +523,12 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
         }
 
         .accordion-row.active {
-          flex: 0 0 160px; /* Active row expands smoothly within fixed 813px container */
+          height: 160px;
+          min-height: 160px;
           padding: 12px 36px;
           background-color: transparent;
         }
 
-        /* LEFT CONTENT BLOCK: Flush left up to padding value */
         .row-content-left {
           display: flex;
           flex-direction: column;
@@ -400,17 +542,11 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
         .row-title-container {
           display: flex;
           align-items: center;
-          gap: 16px; /* 16px spacing between dot and text */
+          gap: 16px;
           margin: 0;
           padding: 0;
-          transition: transform 0.3s ease;
         }
 
-        .accordion-row.active .row-title-container {
-          transform: translateY(0);
-        }
-
-        /* 10px Diameter Circle Indicator — Reserved Layout Space */
         .active-circle-dot {
           width: 10px;
           height: 10px;
@@ -419,14 +555,17 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
           flex-shrink: 0;
           display: inline-block;
           opacity: 0;
-          transition: opacity 0.25s ease;
+          transform: scale(0.6);
+          transition:
+            opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .active-circle-dot.show {
           opacity: 1;
+          transform: scale(1);
         }
 
-        /* TITLE: Poppins Regular, 32px font size, 32px line height */
         .row-title {
           font-family: 'Poppins', sans-serif;
           font-weight: 400;
@@ -435,31 +574,37 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
           color: #0F172A;
           margin: 0;
           padding: 0;
-          transition: color 0.25s ease;
+          transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .row-title.active-title {
           color: #3488FF;
         }
 
-        /* TAG PILLS: Aligned with starting of title (10px dot + 16px gap = 26px margin-left) */
         .row-tag-pills {
           display: flex;
           align-items: center;
           gap: 8px;
-          margin-top: 12px;
-          margin-left: 26px; /* Aligns precisely with starting of title text */
+          margin-top: 0;
+          margin-left: 26px;
           flex-wrap: wrap;
           opacity: 0;
           max-height: 0;
-          transform: translateY(6px);
-          transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
+          transform: translateY(8px);
+          pointer-events: none;
+          transition:
+            opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+            max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+            margin-top 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .row-tag-pills.show {
           opacity: 1;
           max-height: 120px;
+          margin-top: 12px;
           transform: translateY(0);
+          pointer-events: auto;
         }
 
         .accordion-tag-pill {
@@ -476,23 +621,29 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
           box-shadow: 0 1px 3px rgba(52, 136, 255, 0.04);
         }
 
-        /* RIGHT THUMBNAIL IMAGE: Flush right up to padding value */
         .row-thumbnail-wrapper {
           width: 216px;
-          height: 73px; /* Collapsed state */
+          height: 73px;
           border-radius: 20px;
           overflow: hidden;
           flex-shrink: 0;
-          margin-left: auto; /* Pushes thumbnail image flush right to padding */
+          margin-left: auto;
           box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          transition:
+            height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          transform: scale(1);
+          transform-origin: center right;
         }
 
         .accordion-row.active .row-thumbnail-wrapper {
-          height: 136px; /* Expanded state */
+          height: 136px;
+          transform: scale(1.02);
+          box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
         }
 
         .row-thumbnail-img {
@@ -501,9 +652,13 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
           object-fit: cover;
           border-radius: 20px;
           display: block;
+          transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        /* RESPONSIVE BREAKPOINTS */
+        .accordion-row.active .row-thumbnail-img {
+          transform: scale(1.03);
+        }
+
         @media (max-width: 1100px) {
           .section-header-row {
             flex-direction: column;
@@ -515,13 +670,96 @@ export default function ServicesSection({ onSelectService, onExploreSolutions })
           }
 
           .services-left-panel {
+            position: relative;
+            top: auto;
             width: 100%;
             height: auto;
+            min-height: 420px;
           }
 
           .services-accordion-column {
             width: 100%;
+          }
+
+          .accordion-row {
             height: auto;
+            min-height: 88px;
+            padding: 16px 24px;
+          }
+
+          .accordion-row.active {
+            height: auto;
+            min-height: 160px;
+          }
+
+          .row-title {
+            font-size: 24px;
+            line-height: 28px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .section-h2-title {
+            font-size: 28px;
+            line-height: 36px;
+          }
+
+          .accordion-row,
+          .accordion-row.active {
+            padding: 14px 16px;
+            gap: 12px;
+          }
+
+          .row-thumbnail-wrapper {
+            width: 120px;
+            height: 56px;
+          }
+
+          .accordion-row.active .row-thumbnail-wrapper {
+            height: 88px;
+          }
+
+          .row-title {
+            font-size: 18px;
+            line-height: 24px;
+          }
+
+          .row-tag-pills {
+            margin-left: 0;
+          }
+
+          .active-circle-dot {
+            width: 8px;
+            height: 8px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .numeral-track,
+          .icon-carousel-track {
+            transition: none !important;
+          }
+
+          .accordion-row.active .row-thumbnail-wrapper,
+          .accordion-row.active .row-thumbnail-img {
+            transform: none !important;
+          }
+
+          .accordion-row,
+          .active-circle-dot,
+          .row-title,
+          .row-tag-pills,
+          .row-thumbnail-wrapper,
+          .row-thumbnail-img {
+            transition: none !important;
+          }
+
+          .row-tag-pills {
+            transform: none;
+          }
+
+          .row-tag-pills.show {
+            transform: none;
           }
         }
       `}</style>

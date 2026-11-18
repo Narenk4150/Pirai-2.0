@@ -1,240 +1,70 @@
 import React from 'react';
 
-export default function ClientLogoStrip() {
-  // All 28 Real Enterprise Client Partner Logos (User-Provided Explicit B/W & Color Image Pairs)
-  const clientLogos = [
-    {
-      id: 'bid-finance',
-      name: 'Bid Finance',
-      bwSrc: '/images/bid_finance_bw.png',
-      colorSrc: '/images/bid_finance_color.png'
-    },
-    {
-      id: 'xtro',
-      name: 'Xtro',
-      bwSrc: '/images/xtro_bw.png',
-      colorSrc: '/images/xtro_color.png'
-    },
-    {
-      id: 'cognis',
-      name: 'Cognis',
-      bwSrc: '/images/cognis_bw.png',
-      colorSrc: '/images/cognis_color.png'
-    },
-    {
-      id: 'atna',
-      name: 'ATNA Technologies',
-      bwSrc: '/images/atna_bw.png',
-      colorSrc: '/images/atna_color.png'
-    },
-    {
-      id: 'xchanging',
-      name: 'Xchanging',
-      bwSrc: '/images/xchanging_bw.png',
-      colorSrc: '/images/xchanging_color.png'
-    },
-    {
-      id: 'hsbc',
-      name: 'HSBC',
-      bwSrc: '/images/hsbc_bw.png',
-      colorSrc: '/images/hsbc_color.png'
-    },
-    {
-      id: 'multiple-portfolio',
-      name: 'Multiple Portfolio Company Limited',
-      bwSrc: '/images/mp_bw.png',
-      colorSrc: '/images/mp_color.png'
-    },
-    {
-      id: 'ivbm',
-      name: 'IVBM (OPC) Private Limited',
-      bwSrc: '/images/custom_logo_bw1.png',
-      colorSrc: '/images/custom_logo_color1.png'
-    },
-    {
-      id: 'cimb',
-      name: 'CIMB',
-      bwSrc: '/images/cimb_bw.png',
-      colorSrc: '/images/cimb_color.png'
-    },
-    {
-      id: 'neewee',
-      name: 'Neewee',
-      bwSrc: '/images/neewee_bw.png',
-      colorSrc: '/images/neewee_color.png'
-    },
-    {
-      id: 'cmb',
-      name: 'China Merchants Bank',
-      bwSrc: '/images/cmb_bw.png',
-      colorSrc: '/images/cmb_color.png'
-    },
-    {
-      id: 'trualt',
-      name: 'Trualt Bioenergy',
-      bwSrc: '/images/trualt_bw.png',
-      colorSrc: '/images/trualt_color.png'
-    },
-    {
-      id: 'checkbook',
-      name: 'Checkbook',
-      bwSrc: '/images/checkbook_bw.png',
-      colorSrc: '/images/checkbook_color.png'
-    },
-    {
-      id: 'avalon',
-      name: 'Avalon',
-      bwSrc: '/images/avalon_bw.png',
-      colorSrc: '/images/avalon_color.png'
-    },
-    {
-      id: 'vio',
-      name: 'Vio.com',
-      bwSrc: '/images/vio_bw.png',
-      colorSrc: '/images/vio_color.png'
-    },
-    {
-      id: 'sansys',
-      name: 'SANSYS',
-      bwSrc: '/images/sansys_bw.png',
-      colorSrc: '/images/sansys_color.png'
-    },
-    {
-      id: 'cadonix',
-      name: 'Cadonix',
-      bwSrc: '/images/cadonix_bw.png',
-      colorSrc: '/images/cadonix_color.png'
-    },
-    {
-      id: 'robotico',
-      name: 'Robotico',
-      bwSrc: '/images/robotico_bw.png',
-      colorSrc: '/images/robotico_color.png'
-    },
-    {
-      id: 'tti',
-      name: 'TTI',
-      bwSrc: '/images/tti_bw.png',
-      colorSrc: '/images/tti_color.png'
-    },
-    {
-      id: 'oxydata',
-      name: 'Oxydata',
-      bwSrc: '/images/oxydata_bw.png',
-      colorSrc: '/images/oxydata_color.png'
-    },
-    {
-      id: 'daemon',
-      name: 'Daemon',
-      bwSrc: '/images/daemon_bw.png',
-      colorSrc: '/images/daemon_color.png'
-    },
-    {
-      id: 'caresoft',
-      name: 'Caresoft',
-      bwSrc: '/images/caresoft_bw.png',
-      colorSrc: '/images/caresoft_color.png'
-    },
-    {
-      id: 'tailjay',
-      name: 'Tailjay',
-      bwSrc: '/images/tailjay_bw.png',
-      colorSrc: '/images/tailjay_color.png'
-    },
-    {
-      id: 'blue-endeavour',
-      name: 'Blue Endeavour',
-      bwSrc: '/images/blue_endeavour_bw.png',
-      colorSrc: '/images/blue_endeavour_color.png'
-    },
-    {
-      id: 'techx-xlns',
-      name: 'TechX XLNS',
-      bwSrc: '/images/techx_xlns_bw.png',
-      colorSrc: '/images/techx_xlns_color.png'
-    },
-    {
-      id: 'twilight',
-      name: 'Twilight Systems',
-      bwSrc: '/images/twilight_bw.png',
-      colorSrc: '/images/twilight_color.png'
-    },
-    {
-      id: 'pratanut',
-      name: 'Pratanut',
-      bwSrc: '/images/pratanut_bw.png',
-      colorSrc: '/images/pratanut_color.png'
-    },
-    {
-      id: 'express-rail',
-      name: 'Express Rail Link',
-      bwSrc: '/images/express_rail_bw.png',
-      colorSrc: '/images/express_rail_color.png'
-    }
-  ];
+const LOGO_DIR = '/images/Homepage/client-logos';
 
-  // Duplicate list to form a seamless infinite marquee loop
+export default function ClientLogoStrip() {
+  // One color PNG each — B/W via CSS grayscale; color on hover
+  const clientLogos = Array.from({ length: 28 }, (_, i) => {
+    const n = String(i + 1).padStart(2, '0');
+    return {
+      id: `client-${n}`,
+      name: `Client ${i + 1}`,
+      src: `${LOGO_DIR}/client-${n}.png`,
+    };
+  });
+
   const marqueeList = [...clientLogos, ...clientLogos];
 
   return (
     <section className="client-logo-strip">
-      <div className="container logo-strip-container">
-        {/* Caption */}
-        <div className="strip-caption">
-          <span>TRUSTED BY ENTERPRISES ACROSS INDUSTRIES</span>
+      <div className="logo-strip-inner">
+        <div className="strip-caption" data-reveal data-reveal-y="16" data-reveal-duration="0.45">
+          <span>Trusted by enterprises across industries</span>
         </div>
 
-        {/* Continuous Marquee Track */}
         <div className="marquee-wrapper">
-          {/* Gradient Edge Masks */}
-          <div className="marquee-fade-left" />
-          <div className="marquee-fade-right" />
+          <div className="marquee-fade marquee-fade-left" aria-hidden="true" />
+          <div className="marquee-fade marquee-fade-right" aria-hidden="true" />
 
-          {/* Marquee Motion Track */}
-          <div className="marquee-track">
-            {marqueeList.map((logo, index) => (
-              <div key={index} className="logo-chip">
-                {/* Dedicated B/W Image File at Rest */}
-                <img 
-                  src={logo.bwSrc} 
-                  alt={`${logo.name} B/W`} 
-                  className="client-logo-img logo-bw-file" 
-                />
-
-                {/* Dedicated Color Image File on Hover */}
-                <img 
-                  src={logo.colorSrc} 
-                  alt={`${logo.name} Color`} 
-                  className="client-logo-img logo-color-file" 
-                />
-              </div>
-            ))}
+          <div className="marquee-mask">
+            <div className="marquee-track">
+              {marqueeList.map((logo, index) => (
+                <div key={`${logo.id}-${index}`} className="logo-chip">
+                  <img
+                    src={logo.src}
+                    alt={logo.name}
+                    className="client-logo-img"
+                    loading="lazy"
+                    draggable={false}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       <style>{`
         .client-logo-strip {
-          padding: 48px 0;
-          background: #FFFFFF;
-          border-top: 1px solid var(--border);
-          border-bottom: 1px solid var(--border);
+          padding: 72px 0;
+          background: #F8FAFC;
           overflow: hidden;
         }
 
-        .logo-strip-container {
+        .logo-strip-inner {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 28px;
+          gap: 40px;
+          width: 100%;
         }
 
         .strip-caption {
           font-family: var(--font-family);
-          font-size: 12px;
-          font-weight: 600;
-          letter-spacing: 1.5px;
-          color: var(--muted);
+          font-size: 14px;
+          font-weight: 500;
+          letter-spacing: 1.12px;
+          color: #475569;
           text-transform: uppercase;
           text-align: center;
         }
@@ -243,95 +73,163 @@ export default function ClientLogoStrip() {
           position: relative;
           width: 100%;
           overflow: hidden;
-          padding: 16px 0;
+          padding: 20px 0;
+        }
+
+        .marquee-mask {
+          width: 100%;
+          overflow: hidden;
+          -webkit-mask-image: linear-gradient(
+            90deg,
+            transparent 0%,
+            #000 16%,
+            #000 84%,
+            transparent 100%
+          );
+          mask-image: linear-gradient(
+            90deg,
+            transparent 0%,
+            #000 16%,
+            #000 84%,
+            transparent 100%
+          );
+        }
+
+        .marquee-fade {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: clamp(140px, 18vw, 280px);
+          z-index: 3;
+          pointer-events: none;
         }
 
         .marquee-fade-left {
-          position: absolute;
-          top: 0;
           left: 0;
-          bottom: 0;
-          width: 120px;
-          background: linear-gradient(90deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
-          z-index: 10;
-          pointer-events: none;
+          background: linear-gradient(
+            90deg,
+            #F8FAFC 0%,
+            #F8FAFC 35%,
+            rgba(248, 250, 252, 0) 100%
+          );
         }
 
         .marquee-fade-right {
-          position: absolute;
-          top: 0;
           right: 0;
-          bottom: 0;
-          width: 120px;
-          background: linear-gradient(270deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
-          z-index: 10;
-          pointer-events: none;
+          background: linear-gradient(
+            270deg,
+            #F8FAFC 0%,
+            #F8FAFC 35%,
+            rgba(248, 250, 252, 0) 100%
+          );
         }
 
         .marquee-track {
           display: flex;
           align-items: center;
-          gap: 56px;
+          gap: 72px;
           width: max-content;
-          animation: marqueeScroll 45s linear infinite;
+          animation: marqueeScroll 70s linear infinite;
           will-change: transform;
         }
 
-        /* Pause marquee movement on hover so logos can be inspected */
         .marquee-wrapper:hover .marquee-track {
           animation-play-state: paused;
         }
 
         .logo-chip {
-          position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
-          height: 52px;
-          padding: 0 16px;
+          height: 40px;
           flex-shrink: 0;
           cursor: pointer;
         }
 
         .client-logo-img {
-          height: 36px;
+          height: 40px;
           width: auto;
           max-width: 220px;
           object-fit: contain;
-        }
-
-        /* B/W Image File at Rest */
-        .logo-bw-file {
+          object-position: center;
+          filter: grayscale(1);
           opacity: 0.85;
-          transition: opacity 0.35s ease;
+          transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+          user-select: none;
+          -webkit-user-drag: none;
         }
 
-        /* Explicit Color Image File on Hover */
-        .logo-color-file {
-          position: absolute;
-          inset: 0;
-          margin: auto;
-          opacity: 0;
-          transform: scale(0.95);
-          transition: opacity 0.35s ease, transform 0.35s ease;
-        }
-
-        /* Hover Transition: Fade out B/W file, Fade in Color file */
-        .logo-chip:hover .logo-bw-file {
-          opacity: 0;
-        }
-
-        .logo-chip:hover .logo-color-file {
+        .logo-chip:hover .client-logo-img {
+          filter: grayscale(0);
           opacity: 1;
-          transform: scale(1.12);
+          transform: scale(1.04);
         }
 
         @keyframes marqueeScroll {
-          0% {
-            transform: translateX(0);
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+
+        @media (max-width: 990px) {
+          .client-logo-strip {
+            padding: 56px 0;
           }
-          100% {
-            transform: translateX(-50%);
+          .logo-strip-inner {
+            gap: 32px;
+          }
+          .marquee-track {
+            gap: 56px;
+          }
+          .marquee-fade {
+            width: 96px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .client-logo-strip {
+            padding: 48px 0;
+          }
+          .marquee-track {
+            gap: 40px;
+            animation-duration: 55s;
+          }
+          .marquee-fade {
+            width: 64px;
+          }
+          .client-logo-img,
+          .logo-chip {
+            height: 32px;
+          }
+          .marquee-wrapper {
+            padding: 12px 0;
+          }
+          .marquee-mask {
+            -webkit-mask-image: linear-gradient(
+              90deg,
+              transparent 0%,
+              #000 12%,
+              #000 88%,
+              transparent 100%
+            );
+            mask-image: linear-gradient(
+              90deg,
+              transparent 0%,
+              #000 12%,
+              #000 88%,
+              transparent 100%
+            );
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .marquee-track {
+            animation: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            row-gap: 24px;
           }
         }
       `}</style>

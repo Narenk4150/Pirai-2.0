@@ -1,13 +1,13 @@
 import React from 'react';
 import Button from './Button';
 
-export default function CaseStudiesSection({ onSelectCaseStudy }) {
+export default function CaseStudiesSection({ onSelectCaseStudy, onViewAll }) {
   return (
     <section className="case-studies-page-wrapper" id="casestudies">
       <div className="container">
         
         {/* SECTION HEADER ROW — PLACED OUTSIDE THE BOX DIRECTLY ON WHITE PAGE */}
-        <div className="section-header-row">
+        <div className="section-header-row" data-reveal>
           <div className="header-left">
             {/* Eyebrow pill */}
             <div className="eyetray-badge">
@@ -29,7 +29,7 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
 
           {/* Button top-right */}
           <div className="header-right">
-            <Button size="standard" variant="type2">
+            <Button size="hero" variant="type2" onClick={onViewAll}>
               View all case study
             </Button>
           </div>
@@ -42,7 +42,7 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
           <div className="rows-vertical-stack">
 
             {/* ROW 1 — Full-width card (Content LEFT / Image RIGHT, Height 500px, Image 550px x 460px) */}
-            <div className="row-card row-1-card">
+            <div className="row-card row-1-card" data-reveal data-reveal-y="32" data-reveal-duration="0.6">
               {/* Left Content Column (Left padding 24px, top/right/bottom 20px) */}
               <div className="card-content-col">
                 <div className="card-top-meta">
@@ -64,7 +64,12 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
                 </div>
 
                 <div className="card-btn-wrapper">
-                  <Button size="standard" variant="type2" className="btn-case-study">
+                  <Button
+                    size="hero"
+                    variant="type2"
+                    className="btn-case-study"
+                    onClick={() => onSelectCaseStudy?.('hiringjet')}
+                  >
                     View Case Study
                   </Button>
                 </div>
@@ -76,18 +81,20 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
                   src="/images/hiringjet_tablet.jpg" 
                   alt="Claims workflow tablet mockup" 
                   className="panel-mockup-img"
+                  data-reveal-img="1.05"
                 />
               </div>
             </div>
 
             {/* ROW 2 — Full-width card, MIRRORED (Image LEFT 550px x 460px / Content RIGHT) */}
-            <div className="row-card row-2-card">
+            <div className="row-card row-2-card" data-reveal data-reveal-y="32" data-reveal-duration="0.6" data-reveal-delay="0.06">
               {/* Left Image Panel (550px width x 460px height) */}
               <div className="inset-image-panel">
                 <img 
                   src="/images/beacon_monitor.jpg" 
                   alt="Beacon healthcare monitor software dashboard" 
                   className="panel-mockup-img"
+                  data-reveal-img="1.05"
                 />
               </div>
 
@@ -112,7 +119,12 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
                 </div>
 
                 <div className="card-btn-wrapper">
-                  <Button size="standard" variant="type2" className="btn-case-study">
+                  <Button
+                    size="hero"
+                    variant="type2"
+                    className="btn-case-study"
+                    onClick={() => onSelectCaseStudy?.('beacon')}
+                  >
                     View Case Study
                   </Button>
                 </div>
@@ -120,15 +132,16 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
             </div>
 
             {/* ROW 3 — TWO HALF-WIDTH VERTICAL CARDS (HEIGHT 640PX, IMAGE 530PX WIDE x 236PX HEIGHT) */}
-            <div className="row-3-grid">
+            <div className="row-3-grid" data-reveal-stagger="0.1" data-reveal-y="28" data-reveal-duration="0.6">
               
               {/* Card A (Left Vertical Card) */}
-              <div className="row-card vertical-stack-card">
+              <div className="row-card vertical-stack-card" data-reveal-child>
                 <div className="top-image-panel-vertical">
                   <img 
                     src="/images/bank_lending.jpg" 
                     alt="Digital lending dashboard mockup" 
                     className="panel-mockup-img"
+                    data-reveal-img="1.05"
                   />
                 </div>
 
@@ -148,7 +161,12 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
                   </div>
 
                   <div className="card-btn-wrapper">
-                    <Button size="standard" variant="type2" className="btn-case-study">
+                    <Button
+                      size="hero"
+                      variant="type2"
+                      className="btn-case-study"
+                      onClick={() => onSelectCaseStudy?.('urban-cooperative-banks')}
+                    >
                       View Case Study
                     </Button>
                   </div>
@@ -156,12 +174,13 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
               </div>
 
               {/* Card B (Right Vertical Card) */}
-              <div className="row-card vertical-stack-card">
+              <div className="row-card vertical-stack-card" data-reveal-child>
                 <div className="top-image-panel-vertical">
                   <img 
                     src="/images/manufacturing_laptop.jpg" 
                     alt="Manufacturing quality laptop mockup" 
                     className="panel-mockup-img"
+                    data-reveal-img="1.05"
                   />
                 </div>
 
@@ -181,7 +200,12 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
                   </div>
 
                   <div className="card-btn-wrapper">
-                    <Button size="standard" variant="type2" className="btn-case-study">
+                    <Button
+                      size="hero"
+                      variant="type2"
+                      className="btn-case-study"
+                      onClick={() => onSelectCaseStudy?.('predictive-quality')}
+                    >
                       View Case Study
                     </Button>
                   </div>
@@ -197,14 +221,12 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
       </div>
 
       <style>{`
-        /* PAGE BACKGROUND IS WHITE */
         .case-studies-page-wrapper {
           padding: 80px 0;
           background-color: #FFFFFF;
         }
 
-        /* SECTION HEADER ROW — OUTSIDE THE BOX (On white page) */
-        .section-header-row {
+        .case-studies-page-wrapper .section-header-row {
           display: flex;
           align-items: flex-end;
           justify-content: space-between;
@@ -212,33 +234,43 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
           gap: 32px;
         }
 
-        .header-left {
-          max-width: 600px;
+        .case-studies-page-wrapper .header-left {
+          max-width: 657px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
         }
 
-        .section-h2-title {
+        .case-studies-page-wrapper .section-h2-title {
           font-family: 'Poppins', sans-serif;
           font-size: 40px;
           font-weight: 600;
           line-height: 50px;
           color: #0F172A;
-          margin-bottom: 16px;
+          margin: 0;
         }
 
-        .blue-accent {
+        .case-studies-page-wrapper .blue-accent {
           color: #3488FF;
         }
 
-        .header-sub-text {
+        .case-studies-page-wrapper .header-sub-text {
           font-family: 'Poppins', sans-serif;
           font-size: 16px;
           line-height: 26px;
           color: #475569;
-          max-width: 600px;
+          max-width: 657px;
+          margin: 0;
         }
 
-        /* GROUPED CARDS SECTION CONTAINER (1200px width, padding 20px on all sides, box bg #EEF0F4) */
-        .selected-work-outer-container {
+        .case-studies-page-wrapper .header-right {
+          flex-shrink: 0;
+          display: flex;
+          align-items: flex-end;
+        }
+
+        .case-studies-page-wrapper .selected-work-outer-container {
           max-width: 1200px;
           width: 100%;
           margin: 0 auto;
@@ -250,49 +282,59 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
           box-sizing: border-box;
         }
 
-        /* VERTICAL STACK WITH EXACT 20PX SPACING */
-        .rows-vertical-stack {
+        .case-studies-page-wrapper .rows-vertical-stack {
           display: flex;
           flex-direction: column;
           gap: 20px;
         }
 
-        /* INNER CARD COMMON SPECIFICATIONS */
-        .row-card {
+        .case-studies-page-wrapper .row-card {
           background-color: #FFFFFF;
           border-radius: 24px;
           border: 1px solid #E2E8F0;
           overflow: hidden;
           box-shadow: 0 6px 20px rgba(15, 23, 42, 0.02);
-          transition: transform 0.25s ease-out, border-color 0.25s ease-out;
           box-sizing: border-box;
+          transition: box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        .row-card:hover {
-          border-color: #CBD5E1;
-          transform: translateY(-2px);
+        @media (hover: hover) and (pointer: fine) {
+          .case-studies-page-wrapper .row-card:hover {
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+          }
         }
 
-        /* ROW 1 & ROW 2 FULL WIDTH CARDS: Height 500px, padding 20px 20px 20px 24px (Left padding: 24px) */
-        .row-1-card, .row-2-card {
+        .case-studies-page-wrapper .row-1-card {
           display: flex;
-          align-items: center;
+          align-items: stretch;
           height: 500px;
           padding: 20px 20px 20px 24px;
           gap: 20px;
         }
 
-        .card-content-col {
+        .case-studies-page-wrapper .row-2-card {
+          display: flex;
+          align-items: stretch;
+          height: 500px;
+          padding: 20px 24px 20px 20px;
+          gap: 20px;
+        }
+
+        .case-studies-page-wrapper .card-content-col {
           flex: 1;
+          min-width: 0;
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          justify-content: center;
-          height: 100%;
+          justify-content: flex-start;
+          align-self: stretch;
+          min-height: 0;
+          background: transparent;
+          padding: 0;
+          gap: 0;
         }
 
-        /* INSET IMAGE PANEL FOR ROW 1 & 2: Width 550px, Height 460px, Background #EEF0F4 */
-        .inset-image-panel {
+        .case-studies-page-wrapper .inset-image-panel {
           width: 550px;
           height: 460px;
           background-color: #EEF0F4;
@@ -302,18 +344,20 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
+          align-self: center;
         }
 
-        .panel-mockup-img {
+        .case-studies-page-wrapper .panel-mockup-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           border-radius: 12px;
           display: block;
+          transform-origin: center center;
+          will-change: transform;
         }
 
-        /* CARD CONTENT META HEADER */
-        .card-top-meta {
+        .case-studies-page-wrapper .card-top-meta {
           width: 100%;
           display: flex;
           align-items: center;
@@ -321,7 +365,7 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
           margin-bottom: 12px;
         }
 
-        .client-logo-blue {
+        .case-studies-page-wrapper .client-logo-blue {
           font-family: 'Poppins', sans-serif;
           font-size: 16px;
           font-weight: 700;
@@ -329,7 +373,7 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
           letter-spacing: 0.5px;
         }
 
-        .client-logo-dark {
+        .case-studies-page-wrapper .client-logo-dark {
           font-family: 'Poppins', sans-serif;
           font-size: 16px;
           font-weight: 700;
@@ -337,40 +381,39 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
           letter-spacing: 0.5px;
         }
 
-        .category-label-muted {
+        .case-studies-page-wrapper .category-label-muted {
           font-family: 'Poppins', sans-serif;
           font-size: 13px;
           font-weight: 500;
           color: #64748B;
         }
 
-        .card-h3-title {
+        .case-studies-page-wrapper .card-h3-title {
           font-family: 'Poppins', sans-serif;
           font-size: 24px;
           font-weight: 600;
           line-height: 34px;
           color: #0F172A;
-          margin-bottom: 10px;
+          margin: 0 0 12px;
         }
 
-        .card-body-paragraph {
+        .case-studies-page-wrapper .card-body-paragraph {
           font-family: 'Poppins', sans-serif;
-          font-size: 15px;
-          line-height: 24px;
+          font-size: 16px;
+          line-height: 26px;
           color: #475569;
-          margin-bottom: 16px;
+          margin: 0 0 16px;
         }
 
-        /* TAG PILLS */
-        .tag-pills-row {
+        .case-studies-page-wrapper .tag-pills-row {
           display: flex;
           align-items: center;
           gap: 8px;
-          margin-bottom: 20px;
+          margin: 0;
           flex-wrap: wrap;
         }
 
-        .tag-pill-blue {
+        .case-studies-page-wrapper .tag-pill-blue {
           background-color: #EAF2FF;
           color: #3488FF;
           font-family: 'Poppins', sans-serif;
@@ -382,77 +425,78 @@ export default function CaseStudiesSection({ onSelectCaseStudy }) {
           border-radius: 9999px;
         }
 
-        .card-btn-wrapper {
+        .case-studies-page-wrapper .card-btn-wrapper {
           margin-top: auto;
+          width: auto;
+          padding-top: 24px;
         }
 
-        .btn-case-study {
-          min-width: 170px !important;
+        .case-studies-page-wrapper .btn-case-study {
+          width: auto;
+          min-width: 220px;
         }
 
-        /* ROW 3 (TWO HALF-WIDTH CARDS SIDE BY SIDE WITH 20PX SPACING, HEIGHT 640PX) */
-        .row-3-grid {
+        .case-studies-page-wrapper .row-3-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 20px;
         }
 
-        /* VERTICAL STACK CARDS: HEIGHT 640PX, PADDING 24PX */
-        .vertical-stack-card {
+        .case-studies-page-wrapper .vertical-stack-card {
           display: flex;
           flex-direction: column;
-          height: 640px; /* Height of last two vertical cards is 640px */
+          height: 640px;
           padding: 20px;
-          align-items: center;
+          align-items: stretch;
         }
 
-        /* TOP IMAGE PANEL FOR VERTICAL CARDS: WIDTH 530PX, HEIGHT 236PX */
-        .top-image-panel-vertical {
-          width: 530px;
+        .case-studies-page-wrapper .top-image-panel-vertical {
+          width: 100%;
           height: 236px;
-          max-width: 100%;
           background-color: #EEF0F4;
           border-radius: 16px;
           overflow: hidden;
           flex-shrink: 0;
         }
 
-        .vertical-card-body {
+        .case-studies-page-wrapper .vertical-card-body {
           padding-top: 24px;
           width: 100%;
           display: flex;
           flex-direction: column;
           align-items: flex-start;
           flex: 1;
+          min-height: 0;
         }
 
-        /* RESPONSIVE BREAKPOINTS */
         @media (max-width: 1100px) {
-          .section-header-row {
+          .case-studies-page-wrapper .section-header-row {
             flex-direction: column;
             align-items: flex-start;
           }
 
-          .row-1-card, .row-2-card {
+          .case-studies-page-wrapper .row-1-card,
+          .case-studies-page-wrapper .row-2-card {
             height: auto;
             flex-direction: column;
             padding: 24px;
           }
 
-          .row-2-card {
+          .case-studies-page-wrapper .row-2-card {
             flex-direction: column-reverse;
           }
 
-          .inset-image-panel, .top-image-panel-vertical {
+          .case-studies-page-wrapper .inset-image-panel,
+          .case-studies-page-wrapper .top-image-panel-vertical {
             width: 100%;
             height: 300px;
           }
 
-          .row-3-grid {
+          .case-studies-page-wrapper .row-3-grid {
             grid-template-columns: 1fr;
           }
 
-          .vertical-stack-card {
+          .case-studies-page-wrapper .vertical-stack-card {
             height: auto;
           }
         }

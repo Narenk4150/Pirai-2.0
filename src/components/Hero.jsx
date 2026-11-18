@@ -1,83 +1,152 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Button from './Button';
+import { HOMEPAGE_ASSETS } from '../data/homepageAssets';
+import { MOTION, prefersReducedMotion } from '../utils/motion';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const root = sectionRef.current;
+    if (!root || prefersReducedMotion()) return undefined;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: MOTION.ease } });
+
+      tl.fromTo(
+        root.querySelector('.hero-figma-bg-image-wrapper'),
+        { autoAlpha: 0, scale: 1.04, x: 24 },
+        { autoAlpha: 1, scale: 1, x: 0, duration: MOTION.image },
+        0
+      )
+        .fromTo(
+          root.querySelector('.eyetray-badge'),
+          { autoAlpha: 0, y: 16 },
+          { autoAlpha: 1, y: 0, duration: MOTION.text },
+          0.12
+        )
+        .fromTo(
+          root.querySelectorAll('[data-hero-line]'),
+          { autoAlpha: 0, y: 28 },
+          { autoAlpha: 1, y: 0, duration: 0.55, stagger: MOTION.heroStagger },
+          0.18
+        )
+        .fromTo(
+          root.querySelector('.hero-body-copy'),
+          { autoAlpha: 0, y: 18 },
+          { autoAlpha: 1, y: 0, duration: MOTION.text },
+          0.38
+        )
+        .fromTo(
+          root.querySelectorAll('.hero-buttons-group .figma-btn-master'),
+          { autoAlpha: 0, y: 16 },
+          { autoAlpha: 1, y: 0, duration: MOTION.text, stagger: 0.08 },
+          0.48
+        )
+        .fromTo(
+          root.querySelector('.hero-left-stats-row'),
+          { autoAlpha: 0, y: 14 },
+          { autoAlpha: 1, y: 0, duration: MOTION.text },
+          0.62
+        );
+
+      // Restrained parallax on hero image (desktop only)
+      const img = root.querySelector('.hero-figma-portrait-img');
+      if (img && window.matchMedia('(min-width: 991px)').matches) {
+        gsap.to(img, {
+          y: -36,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: root,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.6,
+          },
+        });
+      }
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="hero-section">
-      {/* Figma Absolute Right Hero Image Layer (Placed Higher) */}
+    <section className="hero-section" ref={sectionRef}>
       <div className="hero-figma-bg-image-wrapper">
-        <img 
-          src="/images/hero_portrait.png" 
-          alt="Enterprise AI & Engineering" 
-          className="hero-figma-portrait-img" 
+        <img
+          src={HOMEPAGE_ASSETS.hero}
+          alt="Enterprise AI & Engineering"
+          className="hero-figma-portrait-img"
         />
         <div className="hero-figma-gradient-overlay" />
       </div>
 
       <div className="container hero-container-relative">
         <div className="hero-grid-layout">
-          {/* Left Column: Eyebrow, H1, Body, Buttons, and Stats Row underneath */}
           <div className="hero-content-col">
-            {/* Eyebrow pill badge */}
-            <div className="eyetray-badge">
-              <span className="dot" />
-              <span>Enterprise engineering & applied AI</span>
+            <div className="hero-copy-stack">
+              <div className="eyetray-badge">
+                <span className="dot" />
+                <span>Enterprise engineering & applied AI</span>
+              </div>
+
+              <h1 className="hero-h1">
+                <span className="hero-line" data-hero-line>
+                  We rebuild how enterprises operate —
+                </span>
+                <span className="hero-line" data-hero-line>
+                  <span className="accent-italic">systems teams adopt on day one</span>
+                  , not just deploy.
+                </span>
+              </h1>
+
+              <p className="hero-body-copy section-body">
+                Pirai partners with regulated enterprises to design, build, and ship AI-enabled systems — from insurer claims workflows to manufacturing floor intelligence — engineered around how your teams actually work.
+              </p>
             </div>
 
-            {/* H1 Heading */}
-            <h1 className="hero-h1">
-              We rebuild how enterprises operate — <span className="accent-italic">systems teams adopt on day one,</span> not just deploy.
-            </h1>
-
-            {/* Body paragraph */}
-            <p className="hero-body-copy section-body">
-              Pirai partners with regulated enterprises to design, build, and ship AI-enabled systems — from insurer claims workflows to manufacturing floor intelligence — engineered around how your teams actually work.
-            </p>
-
-            {/* Hero Buttons using Master Figma Component */}
             <div className="hero-buttons-group">
-              <Button variant="type3" size="hero" onClick={onDiscussChallenge}>
+              <Button variant="type1" size="hero" onClick={onDiscussChallenge}>
                 Discuss Your Challenge
               </Button>
 
               <Button variant="type2" size="hero" onClick={onExploreSolutions}>
-                Explore Solutions
+                See Our Work
               </Button>
             </div>
-
-            {/* Divider and 4 Stats placed directly below the left section content */}
-            <div className="hero-left-stats-divider divider" />
 
             <div className="hero-left-stats-row">
               <div className="stat-col">
                 <div className="stat-number">100+</div>
-                <div className="stat-caption">ENGINEERS</div>
+                <div className="stat-caption">Engineers</div>
               </div>
 
               <div className="stat-vert-line" />
 
               <div className="stat-col">
                 <div className="stat-number">8+</div>
-                <div className="stat-caption">YEARS DELIVERING</div>
+                <div className="stat-caption">Years delivering</div>
               </div>
 
               <div className="stat-vert-line" />
 
               <div className="stat-col">
                 <div className="stat-number">5</div>
-                <div className="stat-caption">REGULATED VERTICALS</div>
+                <div className="stat-caption">Regulated verticals</div>
               </div>
 
               <div className="stat-vert-line" />
 
               <div className="stat-col">
                 <div className="stat-number">10wk</div>
-                <div className="stat-caption">AVG. PILOT TO PRODUCTION</div>
+                <div className="stat-caption">Avg. pilot to production</div>
               </div>
             </div>
           </div>
 
-          {/* Right Column Spacer for the background hero image */}
           <div className="hero-graphic-spacer" />
         </div>
       </div>
@@ -85,14 +154,13 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
       <style>{`
         .hero-section {
           position: relative;
-          padding-top: 130px;
-          padding-bottom: 70px;
+          padding-top: 140px;
+          padding-bottom: 60px;
           background: #FFFFFF;
           overflow: hidden;
-          min-height: 680px;
+          min-height: 700px;
         }
 
-        /* Figma Absolute Right Image Layer (Placed Higher) */
         .hero-figma-bg-image-wrapper {
           position: absolute;
           top: 0;
@@ -114,6 +182,7 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
           object-fit: contain;
           object-position: top right;
           transform: translateY(-20px);
+          will-change: transform;
         }
 
         .hero-figma-gradient-overlay {
@@ -140,49 +209,58 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
           flex-direction: column;
           align-items: flex-start;
           text-align: left;
-          max-width: 680px;
+          max-width: 839px;
+          gap: 32px;
+        }
+
+        .hero-copy-stack {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+          width: 100%;
         }
 
         .hero-h1 {
-          margin-bottom: 24px;
+          margin-bottom: 0;
+        }
+
+        .hero-line {
+          display: block;
         }
 
         .hero-body-copy {
           max-width: 669px;
-          margin-bottom: 40px;
+          margin-bottom: 0;
           font-size: 16px;
           color: var(--body);
-          line-height: 1.6;
+          line-height: 1.5;
         }
 
         .hero-buttons-group {
           display: flex;
           align-items: center;
-          gap: 20px;
+          gap: 14px;
           flex-wrap: wrap;
-          margin-bottom: 48px;
+          margin-bottom: 0;
         }
 
         .hero-graphic-spacer {
           height: 520px;
         }
 
-        /* 4 Stats scoped directly inside the left section content width */
-        .hero-left-stats-divider {
-          width: 100%;
-          margin-bottom: 28px;
-        }
-
         .hero-left-stats-row {
           width: 100%;
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          padding: 8px 0;
+          gap: 12px;
+          padding-top: 16px;
+          border-top: 1px solid var(--border);
         }
 
         .stat-col {
-          flex: 1;
+          width: 160px;
+          flex: 0 0 160px;
           display: flex;
           flex-direction: column;
           align-items: flex-start;
@@ -191,26 +269,26 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
         }
 
         .stat-number {
-          font-size: 28px;
+          font-size: 16px;
           font-weight: 600;
           color: var(--heading);
-          line-height: 1.1;
+          line-height: 1.2;
         }
 
         .stat-caption {
-          font-size: 11px;
-          font-weight: 500;
+          font-size: 14px;
+          font-weight: 400;
           color: var(--muted);
           text-transform: uppercase;
-          letter-spacing: 0.5px;
+          letter-spacing: 0;
+          line-height: 1.4;
         }
 
         .stat-vert-line {
           width: 1px;
-          height: 36px;
+          height: 42px;
           background: var(--border);
           flex-shrink: 0;
-          margin: 0 12px;
         }
 
         @media (max-width: 990px) {
@@ -237,15 +315,24 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
 
         @media (max-width: 768px) {
           .hero-left-stats-row {
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 20px;
-            align-items: flex-start;
+          }
+          .stat-col {
+            width: calc(50% - 10px);
+            flex: 0 0 calc(50% - 10px);
           }
           .stat-vert-line {
             display: none;
           }
           .hero-buttons-group .figma-btn-master {
             width: 100%;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-figma-portrait-img {
+            will-change: auto;
           }
         }
       `}</style>

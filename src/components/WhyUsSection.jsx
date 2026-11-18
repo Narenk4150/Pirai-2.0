@@ -1,137 +1,39 @@
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
+import React, { useState } from 'react';
 import Button from './Button';
+import { HOMEPAGE_ASSETS } from '../data/homepageAssets';
 
-// CUSTOM SVG ICONS FOR HOVER REVEAL STATE (WITHOUT CONTAINER BOX)
-function CodeSquareIcon({ size = 96, color = "#3488FF" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="6" y="6" width="36" height="36" rx="10" stroke={color} strokeWidth="2.2" />
-      <path d="M18 17L11 24L18 31" stroke={color} strokeWidth="2.5" />
-      <path d="M30 17L37 24L30 31" stroke={color} strokeWidth="2.5" />
-    </svg>
-  );
-}
+function WhyPiraiCard({ number, label, caption, iconSrc }) {
+  const [isHovered, setIsHovered] = useState(false);
 
-function AiChipIcon({ size = 96, color = "#3488FF" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="10" y="10" width="28" height="28" rx="8" stroke={color} strokeWidth="2.2" />
-      {/* Top & Bottom Pins */}
-      <line x1="16" y1="4" x2="16" y2="10" />
-      <line x1="24" y1="4" x2="24" y2="10" />
-      <line x1="32" y1="4" x2="32" y2="10" />
-      <line x1="16" y1="38" x2="16" y2="44" />
-      <line x1="24" y1="38" x2="24" y2="44" />
-      <line x1="32" y1="38" x2="32" y2="44" />
-      {/* Left & Right Pins */}
-      <line x1="4" y1="16" x2="12" y2="16" />
-      <line x1="4" y1="28" x2="12" y2="28" />
-      <line x1="4" y1="32" x2="10" y2="32" />
-      <line x1="38" y1="16" x2="44" y2="16" />
-      <line x1="38" y1="24" x2="44" y2="24" />
-      <line x1="38" y1="32" x2="44" y2="32" />
-      {/* AI Text Centered */}
-      <text x="24" y="29" fill={color} fontSize="14" fontWeight="700" textAnchor="middle" stroke="none" fontFamily="Poppins, sans-serif">AI</text>
-    </svg>
-  );
-}
-
-function HandshakeIcon({ size = 96, color = "#3488FF" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10 22L18 14C19.5 12.5 22 12.5 23.5 14L28 18.5" />
-      <path d="M38 22L30 14C28.5 12.5 26 12.5 24.5 14L20 18.5" />
-      <path d="M14 26L20 32C21.5 33.5 24 33.5 25.5 32L34 23.5" />
-      <path d="M34 26L28 32C26.5 33.5 24 33.5 22.5 32L14 23.5" />
-    </svg>
-  );
-}
-
-// WHY PIRAI CARD COMPONENT: Removed box around the icon in hover state
-function WhyPiraiCard({ number, label, caption, Icon }) {
-  const cardRef = useRef(null);
-  const numberRef = useRef(null);
-  const hoverGroupRef = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      if (!cardRef.current || !numberRef.current || !hoverGroupRef.current) return;
-
-      const card = cardRef.current;
-      const numberEl = numberRef.current;
-      const hoverGroupEl = hoverGroupRef.current;
-
-      const tl = gsap.timeline({ paused: true });
-
-      // Hover displacement logic:
-      // Card 01: 130
-      // Card 02: 105
-      // Card 03: 105
-      let hoverDisplacement = 115;
-      if (number === '01') hoverDisplacement = 130;
-      if (number === '02') hoverDisplacement = 105;
-      if (number === '03') hoverDisplacement = 105;
-
-      // Numeral glides right on hover WITHOUT fading (opacity stays 1)
-      tl.to(numberEl, { 
-        xPercent: hoverDisplacement, 
-        opacity: 1, 
-        duration: 0.5, 
-        ease: "power3.out" 
-      }, 0);
-
-      // Explicitly set xPercent -50 and yPercent -50 in GSAP so centering is 100% maintained
-      gsap.set(hoverGroupEl, { xPercent: -50, yPercent: -50 });
-
-      // Hover group (width 144px) slides up into middle of card (y: 32 -> y: 0)
-      tl.fromTo(hoverGroupEl,
-        { opacity: 0, y: 32, xPercent: -50, yPercent: -50 },
-        { opacity: 1, y: 0, xPercent: -50, yPercent: -50, duration: 0.45, ease: "power2.out" },
-        0.1
-      );
-
-      // Card border highlight
-      tl.to(card, {
-        borderColor: '#3488FF',
-        boxShadow: '0 12px 30px rgba(52, 136, 255, 0.08)',
-        duration: 0.45,
-        ease: "power3.out"
-      }, 0);
-
-      const onEnter = () => tl.play();
-      const onLeave = () => tl.reverse();
-
-      card.addEventListener("mouseenter", onEnter);
-      card.addEventListener("mouseleave", onLeave);
-      card.addEventListener("focus", onEnter);
-      card.addEventListener("blur", onLeave);
-    });
-
-    return () => ctx.revert();
-  }, []);
+  const restXPercent = number === '01' ? -35 : -30;
+  const hoverXPercent = number === '01' ? 95 : 75;
 
   return (
-    <div ref={cardRef} className="why-pirai-card">
-      {/* 1. REST STATE: Massive 316px Numeral (Card 01 at -35%, Cards 02 & 03 at -30%) */}
-      <div 
-        ref={numberRef} 
-        className={`card-massive-numeral ${number !== '01' ? 'numeral-23-offset' : ''}`}
-      >
-        {number}
-      </div>
+    <div
+      className={`why-pirai-card${isHovered ? ' is-hovered' : ''}`}
+      data-num={number}
+      data-reveal-child
+      style={{
+        '--rest-x': `${restXPercent}%`,
+        '--hover-x': `${hoverXPercent}%`,
+      }}
+      tabIndex={0}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setIsHovered(true)}
+      onBlur={() => setIsHovered(false)}
+    >
+      <span className="why-pirai-card-gradient" aria-hidden="true" />
 
-      {/* 2. HOVER REVEAL GROUP: Positioned dead-center in middle of card vertically & horizontally (No white box around icon) */}
-      <div ref={hoverGroupRef} className="card-hover-group">
-        {/* Direct Icon (No white background box) */}
+      <div className="card-massive-numeral">{number}</div>
+
+      <div className="card-hover-group">
         <div className="icon-wrapper">
-          <Icon size={96} color="#3488FF" />
+          <img src={iconSrc} alt="" width={96} height={96} draggable={false} />
         </div>
-        {/* SemiBold 16 Caption (Width 144px, 16px spacing below icon) */}
         <p className="hover-caption-semibold">{caption}</p>
       </div>
 
-      {/* 3. PINNED BOTTOM LABEL: Placed 18px from bottom & centered */}
       <div className="card-bottom-label">{label}</div>
     </div>
   );
@@ -143,28 +45,26 @@ export default function WhyUsSection({ onAboutUs }) {
       number: '01',
       label: 'ENGINEERED',
       caption: 'Secure. Scalable. Enterprise-ready.',
-      Icon: CodeSquareIcon
+      iconSrc: HOMEPAGE_ASSETS.whyPirai.ENGINEERED,
     },
     {
       number: '02',
       label: 'INTELLIGENT',
       caption: 'AI-powered operations with measurable impact.',
-      Icon: AiChipIcon
+      iconSrc: HOMEPAGE_ASSETS.whyPirai.INTELLIGENT,
     },
     {
       number: '03',
       label: 'TRUSTED',
       caption: 'Long-term partnerships built on outcomes.',
-      Icon: HandshakeIcon
-    }
+      iconSrc: HOMEPAGE_ASSETS.whyPirai.TRUSTED,
+    },
   ];
 
   return (
     <section className="why-us-section-wrapper" id="why-pirai">
       <div className="container">
-        
-        {/* HEADER — OUTSIDE THE BOX ON WHITE PAGE */}
-        <div className="section-header-row">
+        <div className="section-header-row" data-reveal>
           <div className="header-left">
             <div className="eyetray-badge">
               <span className="dot" />
@@ -180,36 +80,38 @@ export default function WhyUsSection({ onAboutUs }) {
           </div>
 
           <div className="header-right">
-            <Button variant="type3" size="standard" onClick={onAboutUs}>
+            <Button variant="type3" size="hero" onClick={onAboutUs}>
               About Us
             </Button>
           </div>
         </div>
 
-        {/* 3-CARD GRID: Light gray (#EEF0F4) cards, 386px * 500px */}
-        <div className="why-pirai-grid-container">
+        <div
+          className="why-pirai-grid-container"
+          data-reveal-stagger="0.12"
+          data-reveal-y="36"
+          data-reveal-duration="0.7"
+          data-reveal-scale="1.03"
+        >
           {cardsData.map((card) => (
-            <WhyPiraiCard 
+            <WhyPiraiCard
               key={card.number}
               number={card.number}
               label={card.label}
               caption={card.caption}
-              Icon={card.Icon}
+              iconSrc={card.iconSrc}
             />
           ))}
         </div>
-
       </div>
 
       <style>{`
-        /* PAGE WRAPPER IS WHITE */
         .why-us-section-wrapper {
           padding: 80px 0;
           background-color: #FFFFFF;
         }
 
-        /* HEADER ROW — OUTSIDE THE BOX DIRECTLY ON WHITE PAGE */
-        .section-header-row {
+        .why-us-section-wrapper .section-header-row {
           display: flex;
           align-items: flex-end;
           justify-content: space-between;
@@ -217,11 +119,11 @@ export default function WhyUsSection({ onAboutUs }) {
           gap: 32px;
         }
 
-        .header-left {
+        .why-us-section-wrapper .header-left {
           max-width: 680px;
         }
 
-        .section-h2-title {
+        .why-us-section-wrapper .section-h2-title {
           font-family: 'Poppins', sans-serif;
           font-size: 40px;
           font-weight: 600;
@@ -230,11 +132,11 @@ export default function WhyUsSection({ onAboutUs }) {
           margin-bottom: 16px;
         }
 
-        .blue-accent {
+        .why-us-section-wrapper .blue-accent {
           color: #3488FF;
         }
 
-        .header-sub-text {
+        .why-us-section-wrapper .header-sub-text {
           font-family: 'Poppins', sans-serif;
           font-size: 16px;
           line-height: 26px;
@@ -242,7 +144,6 @@ export default function WhyUsSection({ onAboutUs }) {
           max-width: 600px;
         }
 
-        /* 3-CARD GRID CONTAINER */
         .why-pirai-grid-container {
           display: flex;
           justify-content: center;
@@ -251,31 +152,57 @@ export default function WhyUsSection({ onAboutUs }) {
           margin: 0 auto;
         }
 
-        /* LIGHT GRAY (#EEF0F4) CARD CONTAINER: Width 386px * Height 500px */
+        /* LIGHT GRAY CARD — no stroke; gradient + white content on hover */
         .why-pirai-card {
           position: relative;
           width: 386px;
-          height: 500px;                     /* Exact height 500px */
+          height: 500px;
           background: #EEF0F4;
-          border: 1.5px solid #FFFFFF;
+          border: none;
           border-radius: 32px;
           padding: 0;
           box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
           box-sizing: border-box;
           overflow: hidden;
           cursor: pointer;
-          transition: border-color 0.45s ease, box-shadow 0.45s ease;
+          isolation: isolate;
+          outline: none;
           flex: 0 0 386px;
+          transition: box-shadow 0.35s cubic-bezier(0.65, 0, 0.35, 1);
         }
 
-        /* MASSIVE 316PX NUMERAL BASE STYLE (Card 01 at -35%) */
+        .why-pirai-card-gradient {
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: linear-gradient(180deg, #3488FF 0%, #69A8FF 100%);
+          transform: scaleY(0);
+          transform-origin: bottom center;
+          transition: transform 0.32s cubic-bezier(0.65, 0, 0.35, 1);
+          z-index: 0;
+          pointer-events: none;
+          will-change: transform;
+        }
+
+        .why-pirai-card.is-hovered,
+        .why-pirai-card:hover,
+        .why-pirai-card:focus-visible {
+          box-shadow: 0 14px 32px rgba(52, 136, 255, 0.28);
+        }
+
+        .why-pirai-card.is-hovered .why-pirai-card-gradient,
+        .why-pirai-card:hover .why-pirai-card-gradient,
+        .why-pirai-card:focus-visible .why-pirai-card-gradient {
+          transform: scaleY(1);
+        }
+
+        /* MASSIVE NUMERAL — rest/hover x via CSS vars; fast leave (~60ms) */
         .card-massive-numeral {
           position: absolute;
-          top: 40px;                         /* Placed 40px from top line */
+          top: 40px;
           left: 0;
-          transform: translateX(-35%);       /* Card 01 rest position */
           font-family: 'Poppins', sans-serif;
-          font-size: 316px;                  /* Height 316px */
+          font-size: 316px;
           font-weight: 800;
           line-height: 1;
           color: #3488FF;
@@ -284,73 +211,113 @@ export default function WhyUsSection({ onAboutUs }) {
           font-feature-settings: "tnum";
           user-select: none;
           pointer-events: none;
-          will-change: transform;
           z-index: 1;
           white-space: nowrap;
           opacity: 1;
+          transform: translateX(var(--rest-x));
+          transition:
+            transform 0.06s ease,
+            color 0.25s cubic-bezier(0.65, 0, 0.35, 1);
+          will-change: transform, color;
         }
 
-        /* CARDS 02 & 03 OFFSET (-30%) */
-        .numeral-23-offset {
-          transform: translateX(-30%);
+        .why-pirai-card.is-hovered .card-massive-numeral,
+        .why-pirai-card:hover .card-massive-numeral,
+        .why-pirai-card:focus-visible .card-massive-numeral {
+          transform: translateX(var(--hover-x));
+          color: #FFFFFF;
+          transition:
+            transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+            color 0.3s cubic-bezier(0.65, 0, 0.35, 1);
         }
 
-        /* HOVER REVEAL GROUP: Positioned dead-center in middle of card vertically & horizontally */
         .card-hover-group {
           position: absolute;
-          top: 50%;                          /* Middle of card vertically */
-          left: 50%;                         /* Middle of card horizontally */
-          transform: translate(-50%, -50%);  /* Middle anchor point */
-          width: 144px;                      /* Width of content is 144px */
+          top: 50%;
+          left: 50%;
+          width: 180px;
           display: flex;
           flex-direction: column;
-          align-items: center;              /* Center-aligned */
-          justify-content: center;           /* Center-aligned */
-          text-align: center;               /* Center-aligned */
+          align-items: center;
+          justify-content: center;
+          text-align: center;
           pointer-events: none;
           z-index: 3;
           opacity: 0;
+          transform: translate(-50%, calc(-50% + 32px));
+          transition:
+            opacity 0.06s ease,
+            transform 0.06s ease;
           will-change: transform, opacity;
         }
 
-        /* DIRECT ICON WRAPPER (NO WHITE BOX AROUND ICON) */
+        .why-pirai-card.is-hovered .card-hover-group,
+        .why-pirai-card:hover .card-hover-group,
+        .why-pirai-card:focus-visible .card-hover-group {
+          opacity: 1;
+          transform: translate(-50%, -50%);
+          transition:
+            opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
         .icon-wrapper {
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-bottom: 16px;               /* Spacing between icon and text is 16px */
+          margin-bottom: 16px;
         }
 
-        /* CAPTION: SemiBold 16px, width 144px */
+        .icon-wrapper img {
+          display: block;
+          width: 96px;
+          height: 96px;
+          object-fit: contain;
+          transition: filter 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .why-pirai-card.is-hovered .icon-wrapper img,
+        .why-pirai-card:hover .icon-wrapper img,
+        .why-pirai-card:focus-visible .icon-wrapper img {
+          filter: brightness(0) invert(1);
+        }
+
         .hover-caption-semibold {
           font-family: 'Poppins', sans-serif;
-          font-size: 16px;                   /* Content is SemiBold 16 */
-          font-weight: 600;                  /* SemiBold 16 */
-          color: #0F172A;
+          font-size: 16px;
+          font-weight: 600;
+          color: #FFFFFF;
           line-height: 24px;
           margin: 0;
-          width: 144px;                      /* Width of content is 144px */
+          width: 180px;
+          min-height: 72px;
           text-align: center;
         }
 
-        /* PINNED LABEL AT BOTTOM: 18px from bottom */
         .card-bottom-label {
           position: absolute;
-          bottom: 18px;                      /* Content / Label placed 18px from bottom */
+          bottom: 18px;
           left: 50%;
-          transform: translateX(-50%);       /* Centered */
+          transform: translateX(-50%);
           font-family: 'Poppins', sans-serif;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 700;
+          line-height: 24px;
           color: #0F172A;
-          letter-spacing: 1.5px;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
           white-space: nowrap;
           z-index: 4;
           pointer-events: none;
+          transition: color 0.3s cubic-bezier(0.65, 0, 0.35, 1);
         }
 
-        /* RESPONSIVE BREAKPOINTS */
+        .why-pirai-card.is-hovered .card-bottom-label,
+        .why-pirai-card:hover .card-bottom-label,
+        .why-pirai-card:focus-visible .card-bottom-label {
+          color: #FFFFFF;
+        }
+
         @media (max-width: 1024px) {
           .why-pirai-grid-container {
             flex-direction: column;
@@ -360,10 +327,21 @@ export default function WhyUsSection({ onAboutUs }) {
             width: 100%;
             max-width: 386px;
             height: 440px;
+            flex: 0 0 auto;
           }
-          .section-header-row {
+          .why-us-section-wrapper .section-header-row {
             flex-direction: column;
             align-items: flex-start;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .why-pirai-card-gradient,
+          .card-massive-numeral,
+          .card-hover-group,
+          .card-bottom-label,
+          .icon-wrapper img {
+            transition: none !important;
           }
         }
       `}</style>
