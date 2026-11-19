@@ -3,18 +3,21 @@ export const SOLUTIONS = [
     id: 'intelligent-automation',
     aliases: ['ai-automation', 'ai-&-intelligent-automation'],
     navLabels: ['AI Automation', 'Intelligent Automation', 'AI & Intelligent Automation'],
-    pill: 'AI & Intelligent Automation',
+    pill: 'Intelligent Automation',
     heroTitle: 'Turn Complex Operations Into',
     heroAccent: 'Intelligent Workflows',
     lead:
       'Pirai connects AI, workflows and enterprise systems to automate repetitive work and improve how teams operate.',
+    primaryCta: 'Explore the solution',
+    secondaryCta: 'View Case Studies',
+    secondaryCtaTarget: 'cases',
     problem: {
       pill: 'The Enterprise Problem',
       titleBefore: 'Enterprise AI',
       titleAfter: ' is rarely limited by the model.',
       lead:
         'The harder problem is connecting intelligence to the systems, information and workflows that run the business.',
-      image: '/images/hiringjet_tablet.jpg',
+      image: '/images/Services/AI%20Automation/Enterprise%20Problem.png',
       items: [
         {
           number: '01',
@@ -43,16 +46,70 @@ export const SOLUTIONS = [
         },
       ],
     },
+    methodology: {
+      titleBefore: 'One method,',
+      titleAccent: 'Six disciplined stages.',
+      lead:
+        'A repeatable path from operational reality to governed intelligence — so AI becomes part of how the business runs.',
+      stages: [
+        {
+          number: '01',
+          title: 'Understand',
+          body: 'Map the real workflow, constraints and decision points that shape day-to-day operations.',
+        },
+        {
+          number: '02',
+          title: 'Contextualise',
+          body: 'Ground models in enterprise data, policy and process so outputs reflect how work actually happens.',
+        },
+        {
+          number: '03',
+          title: 'Reason',
+          body: 'Apply structured reasoning to exceptions, priorities and handoffs — not just generate answers.',
+        },
+        {
+          number: '04',
+          title: 'Act',
+          body: 'Trigger the right systems and human steps so intelligence moves work forward safely.',
+        },
+        {
+          number: '05',
+          title: 'Govern',
+          body: 'Keep auditability, approvals and controls in the loop from the first production release.',
+        },
+        {
+          number: '06',
+          title: 'Learn',
+          body: 'Measure outcomes, capture feedback and improve the system with every operating cycle.',
+        },
+      ],
+    },
+    pain: {
+      titleBefore: 'When intelligence can’t move through the workflow,',
+      titleAccent: 'the business pays for it.',
+    },
     painCards: [
-      { title: 'Hours lost to manual work every week' },
-      { title: 'Handoffs slow delivery cycles.' },
-      { title: 'Scattered context delays delivery.' },
-      { title: 'Budget spent on pilots that never ship' },
+      {
+        title: 'Hours lost to manual work every week',
+        icon: '/images/Services/AI%20Automation/Hours.svg',
+      },
+      {
+        title: 'Handoffs slow delivery cycles.',
+        icon: '/images/Services/AI%20Automation/Handoffs.svg',
+      },
+      {
+        title: 'Scattered context delays delivery.',
+        icon: '/images/Services/AI%20Automation/Scattered.svg',
+      },
+      {
+        title: 'Budget spent on pilots that never ship',
+        icon: '/images/Services/AI%20Automation/Budget.svg',
+      },
     ],
     highlightCard: {
       brand: 'Pirai',
       body: 'We connect intelligence to the work itself.',
-      cta: 'View all',
+      cta: 'Discuss Your Challenge',
     },
     capabilities: {
       pill: 'Intelligent Enterprise',
@@ -71,6 +128,15 @@ export const SOLUTIONS = [
       pill: 'Intelligent Enterprise',
       titleBefore: 'Intelligence designed around your',
       titleAccent: 'enterprise architecture.',
+      diagram: {
+        left: ['Workflow', 'Intelligence', 'Systems'],
+        right: ['Data', 'Outcomes', 'Governance'],
+      },
+    },
+    cases: {
+      titleBefore: 'AI that works',
+      titleAccent: 'beyond the prototype.',
+      lead: 'Applied AI systems designed around real operating workflows — not demos that stall after the pilot.',
     },
     architecture: {
       pill: 'The Full Stack',
@@ -78,11 +144,31 @@ export const SOLUTIONS = [
       titleAccent: 'not the enterprise to AI.',
       lead: 'Five layers working together as one system — not five disconnected tools bolted onto the business.',
       layers: [
-        { title: 'AI', items: ['LLMs', 'ML Models', 'AI Agents'] },
-        { title: 'Data', items: ['Data Platforms', 'Vector Search', 'Knowledge Systems'] },
-        { title: 'Integration', items: ['APIs', 'Enterprise Applications', 'Event Systems'] },
-        { title: 'Infrastructure', items: ['Cloud', 'Containers', 'DevOps'] },
-        { title: 'Governance', items: ['Security', 'Access Control', 'Human Approval'] },
+        {
+          title: 'AI',
+          icon: '/images/Services/AI%20Automation/AI.svg',
+          items: ['LLMs', 'ML Models', 'AI Agents'],
+        },
+        {
+          title: 'Data',
+          icon: '/images/Services/AI%20Automation/Data.svg',
+          items: ['Data Platforms', 'Vector Search', 'Knowledge Systems'],
+        },
+        {
+          title: 'Integration',
+          icon: '/images/Services/AI%20Automation/Integration.svg',
+          items: ['APIs', 'Enterprise Applications', 'Event Systems'],
+        },
+        {
+          title: 'Infrastructure',
+          icon: '/images/Services/AI%20Automation/Infrastructure.svg',
+          items: ['Cloud', 'Containers', 'DevOps'],
+        },
+        {
+          title: 'Governance',
+          icon: '/images/Services/AI%20Automation/Governance.svg',
+          items: ['Security', 'Access Control', 'Human Approval'],
+        },
       ],
     },
     caseStudyIds: ['insurance-claims', 'urban-cooperative-banks', 'predictive-quality'],

@@ -89,6 +89,7 @@ export default function HomePage() {
         />
         <IndustriesSection
           onSelectIndustry={(ind) => handleOpenDemo({ title: ind.name })}
+          onViewDetails={() => handleOpenDemo({ title: 'Industry Solutions' })}
         />
         <WhyUsSection onAboutUs={() => navigate('/about')} />
         <TestimonialsSection />

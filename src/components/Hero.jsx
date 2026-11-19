@@ -75,15 +75,6 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
 
   return (
     <section className="hero-section" ref={sectionRef}>
-      <div className="hero-figma-bg-image-wrapper">
-        <img
-          src={HOMEPAGE_ASSETS.hero}
-          alt="Enterprise AI & Engineering"
-          className="hero-figma-portrait-img"
-        />
-        <div className="hero-figma-gradient-overlay" />
-      </div>
-
       <div className="container hero-container-relative">
         <div className="hero-grid-layout">
           <div className="hero-content-col">
@@ -147,7 +138,16 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
             </div>
           </div>
 
-          <div className="hero-graphic-spacer" />
+          <div className="hero-graphic-col" aria-hidden="true">
+            <div className="hero-figma-bg-image-wrapper">
+              <img
+                src={HOMEPAGE_ASSETS.hero}
+                alt=""
+                className="hero-figma-portrait-img"
+              />
+              <div className="hero-figma-gradient-overlay" />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -161,37 +161,6 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
           min-height: 700px;
         }
 
-        .hero-figma-bg-image-wrapper {
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 52%;
-          max-width: 700px;
-          height: 100%;
-          z-index: 1;
-          pointer-events: none;
-          display: flex;
-          align-items: flex-start;
-          justify-content: flex-end;
-        }
-
-        .hero-figma-portrait-img {
-          height: 100%;
-          width: auto;
-          max-height: 700px;
-          object-fit: contain;
-          object-position: top right;
-          transform: translateY(-20px);
-          will-change: transform;
-        }
-
-        .hero-figma-gradient-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(180deg, rgba(255, 255, 255, 0) 65%, rgba(255, 255, 255, 1) 100%);
-          pointer-events: none;
-        }
-
         .hero-container-relative {
           position: relative;
           z-index: 2;
@@ -199,9 +168,9 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
 
         .hero-grid-layout {
           display: grid;
-          grid-template-columns: 1.2fr 0.8fr;
-          gap: 40px;
-          align-items: flex-start;
+          grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+          gap: 24px;
+          align-items: start;
         }
 
         .hero-content-col {
@@ -209,8 +178,10 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
           flex-direction: column;
           align-items: flex-start;
           text-align: left;
-          max-width: 839px;
+          max-width: 720px;
           gap: 32px;
+          position: relative;
+          z-index: 2;
         }
 
         .hero-copy-stack {
@@ -245,8 +216,41 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
           margin-bottom: 0;
         }
 
-        .hero-graphic-spacer {
-          height: 520px;
+        .hero-graphic-col {
+          position: relative;
+          min-height: 560px;
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+        }
+
+        .hero-figma-bg-image-wrapper {
+          position: relative;
+          width: 100%;
+          max-width: 520px;
+          height: 620px;
+          margin-top: -48px;
+          pointer-events: none;
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+        }
+
+        .hero-figma-portrait-img {
+          height: 100%;
+          width: 100%;
+          max-height: 620px;
+          object-fit: contain;
+          object-position: top center;
+          transform: translateY(-12px);
+          will-change: transform;
+        }
+
+        .hero-figma-gradient-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0) 62%, rgba(255, 255, 255, 1) 100%);
+          pointer-events: none;
         }
 
         .hero-left-stats-row {
@@ -291,6 +295,17 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
           flex-shrink: 0;
         }
 
+        @media (max-width: 1100px) {
+          .hero-grid-layout {
+            grid-template-columns: minmax(0, 1.1fr) minmax(240px, 0.9fr);
+            gap: 16px;
+          }
+          .hero-figma-bg-image-wrapper {
+            max-width: 440px;
+            height: 560px;
+          }
+        }
+
         @media (max-width: 990px) {
           .hero-grid-layout {
             grid-template-columns: 1fr;
@@ -298,18 +313,19 @@ export default function Hero({ onDiscussChallenge, onExploreSolutions }) {
           .hero-content-col {
             max-width: 100%;
           }
+          .hero-graphic-col {
+            order: -1;
+            min-height: 0;
+            justify-content: center;
+          }
           .hero-figma-bg-image-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 100%;
-            height: 380px;
-            top: 0;
+            margin-top: 0;
+            height: 360px;
+            max-width: 420px;
           }
           .hero-figma-portrait-img {
             transform: translateY(0);
-          }
-          .hero-graphic-spacer {
-            display: none;
+            max-height: 360px;
           }
         }
 

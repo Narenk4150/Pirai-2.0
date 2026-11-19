@@ -31,14 +31,18 @@ export default function SolutionDetailPage() {
           solution={solution}
           onDiscussChallenge={() => setModalOpen(true)}
           onExploreCapabilities={() => {
-            const el = document.querySelector('.sol-capabilities');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            const cases = document.querySelector('.sol-cases');
+            const caps = document.querySelector('.sol-capabilities');
+            const target = solution.secondaryCtaTarget === 'cases' ? cases : caps;
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }}
         />
-        <EngineeringChallengeCTA
-          onDiscussChallenge={() => setModalOpen(true)}
-          onExploreSolutions={() => navigate('/')}
-        />
+        {solution.id !== 'intelligent-automation' && (
+          <EngineeringChallengeCTA
+            onDiscussChallenge={() => setModalOpen(true)}
+            onExploreSolutions={() => navigate('/')}
+          />
+        )}
         <CTABanner
           onDiscussChallenge={() => setModalOpen(true)}
           onExploreSolutions={() => navigate('/')}

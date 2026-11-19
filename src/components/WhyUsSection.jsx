@@ -80,7 +80,7 @@ export default function WhyUsSection({ onAboutUs }) {
           </div>
 
           <div className="header-right">
-            <Button variant="type3" size="hero" onClick={onAboutUs}>
+            <Button variant="type2" size="hero" onClick={onAboutUs}>
               About Us
             </Button>
           </div>

@@ -3,6 +3,53 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../Button';
 import { getCaseStudyById } from '../../data/caseStudies';
 
+function ArchitectureDiagram({ left = [], right = [] }) {
+  return (
+    <div className="sol-arch-diagram" aria-hidden="true">
+      <div className="sol-arch-side sol-arch-left">
+        {left.map((label, index) => (
+          <div key={label} className={`sol-arch-label pos-${index}`}>
+            <span>{label}</span>
+            <i />
+          </div>
+        ))}
+      </div>
+
+      <div className="sol-arch-stack">
+        <div className="sol-arch-stack-inner">
+          {[0, 1, 2, 3, 4].map((layer) => (
+            <span key={layer} className={`sol-arch-layer layer-${layer}`} />
+          ))}
+        </div>
+      </div>
+
+      <div className="sol-arch-side sol-arch-right">
+        {right.map((label, index) => (
+          <div key={label} className={`sol-arch-label pos-${index}`}>
+            <i />
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CapCheckIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <circle cx="11" cy="11" r="11" fill="#3488FF" />
+      <path
+        d="M6.5 11.2L9.6 14.2L15.5 7.8"
+        stroke="#fff"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function SolutionDetail({
   solution,
   onDiscussChallenge,
@@ -12,6 +59,20 @@ export default function SolutionDetail({
   const studies = (solution.caseStudyIds || [])
     .map((id) => getCaseStudyById(id))
     .filter(Boolean);
+
+  const primaryCta = solution.primaryCta || 'Discuss Your Challenge';
+  const secondaryCta = solution.secondaryCta || 'Explore Capabilities';
+
+  const handleSecondary = () => {
+    if (solution.secondaryCtaTarget === 'cases') {
+      const el = document.querySelector('.sol-cases');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+    }
+    if (onExploreCapabilities) onExploreCapabilities();
+  };
 
   return (
     <div className="solution-detail">
@@ -28,10 +89,10 @@ export default function SolutionDetail({
           <p>{solution.lead}</p>
           <div className="sol-hero-actions">
             <Button variant="type1" size="hero" onClick={onDiscussChallenge}>
-              Discuss Your Challenge
+              {primaryCta}
             </Button>
-            <Button variant="type2" size="hero" onClick={onExploreCapabilities}>
-              Explore Capabilities
+            <Button variant="type2" size="hero" onClick={handleSecondary}>
+              {secondaryCta}
             </Button>
           </div>
         </div>
@@ -40,15 +101,15 @@ export default function SolutionDetail({
       {solution.problem && (
         <section className="sol-problem">
           <div className="container">
-            <div className="section-pill">
-              <span className="dot" />
-              <span>{solution.problem.pill}</span>
+            <div className="sol-problem-heading">
+              <h2>
+                <span className="blue-accent">{solution.problem.titleBefore}</span>
+                {solution.problem.titleAfter}
+              </h2>
+              {solution.problem.lead ? (
+                <p className="sol-lead">{solution.problem.lead}</p>
+              ) : null}
             </div>
-            <h2>
-              <span className="blue-accent">{solution.problem.titleBefore}</span>
-              {solution.problem.titleAfter}
-            </h2>
-            <p className="sol-lead">{solution.problem.lead}</p>
             <div className="sol-problem-grid">
               <div className="sol-problem-media">
                 <img src={solution.problem.image} alt="" />
@@ -56,7 +117,6 @@ export default function SolutionDetail({
               <ol className="sol-problem-list">
                 {solution.problem.items.map((item) => (
                   <li key={item.number}>
-                    <span className="num">{item.number}</span>
                     <div>
                       <strong>{item.title}</strong>
                       <p>{item.body}</p>
@@ -64,6 +124,31 @@ export default function SolutionDetail({
                   </li>
                 ))}
               </ol>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {solution.methodology && (
+        <section className="sol-methodology">
+          <div className="container">
+            <div className="sol-methodology-header">
+              <h2 className="center">
+                {solution.methodology.titleBefore}{' '}
+                <span className="blue-accent">{solution.methodology.titleAccent}</span>
+              </h2>
+              {solution.methodology.lead ? (
+                <p className="sol-lead center">{solution.methodology.lead}</p>
+              ) : null}
+            </div>
+            <div className="sol-method-grid">
+              {solution.methodology.stages.map((stage) => (
+                <article key={stage.number} className="sol-method-card">
+                  <span className="num">{stage.number}</span>
+                  <h3>{stage.title}</h3>
+                  <p>{stage.body}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
@@ -120,22 +205,34 @@ export default function SolutionDetail({
 
       {solution.painCards && (
         <section className="sol-pain">
-          <div className="container sol-pain-grid">
-            {solution.painCards.map((card) => (
-              <article key={card.title} className="sol-pain-card">
-                <div className="icon-dot" />
-                <p>{card.title}</p>
-              </article>
-            ))}
-            {solution.highlightCard && (
-              <article className="sol-highlight-card">
-                <div className="brand">{solution.highlightCard.brand}</div>
-                <p>{solution.highlightCard.body}</p>
-                <button type="button" onClick={onExploreCapabilities}>
-                  {solution.highlightCard.cta} ↗
-                </button>
-              </article>
+          <div className="container">
+            {solution.pain && (
+              <h2 className="sol-pain-title">
+                {solution.pain.titleBefore}{' '}
+                <span className="blue-accent">{solution.pain.titleAccent}</span>
+              </h2>
             )}
+            <div className="sol-pain-grid">
+              {solution.painCards.map((card) => (
+                <article key={card.title} className="sol-pain-card">
+                  {card.icon ? (
+                    <img className="sol-pain-icon" src={card.icon} alt="" width={40} height={40} />
+                  ) : (
+                    <div className="icon-dot" />
+                  )}
+                  <p>{card.title}</p>
+                </article>
+              ))}
+              {solution.highlightCard && (
+                <article className="sol-highlight-card">
+                  <div className="brand">{solution.highlightCard.brand}</div>
+                  <p>{solution.highlightCard.body}</p>
+                  <button type="button" onClick={onDiscussChallenge}>
+                    {solution.highlightCard.cta}
+                  </button>
+                </article>
+              )}
+            </div>
           </div>
         </section>
       )}
@@ -185,22 +282,24 @@ export default function SolutionDetail({
       {solution.capabilities && (
         <section className="sol-capabilities">
           <div className="container">
-            <div className="section-pill">
-              <span className="dot" />
-              <span>{solution.capabilities.pill}</span>
-            </div>
-            <h2>
-              <span className="blue-accent">{solution.capabilities.titleBefore}</span>{' '}
-              {solution.capabilities.titleAccent}
-            </h2>
-            <p className="sol-lead">{solution.capabilities.lead}</p>
-            <div className="sol-cap-list">
-              {solution.capabilities.items.map((item, index) => (
-                <div key={item} className="sol-cap-row">
-                  <span className="num">{String(index + 1).padStart(2, '0')}</span>
-                  <strong>{item}</strong>
-                </div>
-              ))}
+            <div className="sol-cap-panel">
+              <div className="sol-cap-header">
+                <h2>
+                  <span className="blue-accent">{solution.capabilities.titleBefore}</span>{' '}
+                  {solution.capabilities.titleAccent}
+                </h2>
+                {solution.capabilities.lead ? (
+                  <p className="sol-lead">{solution.capabilities.lead}</p>
+                ) : null}
+              </div>
+              <div className="sol-cap-list">
+                {solution.capabilities.items.map((item) => (
+                  <div key={item} className="sol-cap-row">
+                    <CapCheckIcon />
+                    <strong>{item}</strong>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -209,54 +308,98 @@ export default function SolutionDetail({
       {solution.showcase && (
         <section className="sol-showcase">
           <div className="container">
-            <div className="section-pill center-pill">
-              <span className="dot" />
-              <span>{solution.showcase.pill}</span>
-            </div>
-            <h2 className="center">
+            <h2 className="center sol-showcase-title">
               {solution.showcase.titleBefore}{' '}
               <span className="blue-accent">{solution.showcase.titleAccent}</span>
             </h2>
+            {solution.showcase.diagram ? (
+              <ArchitectureDiagram
+                left={solution.showcase.diagram.left}
+                right={solution.showcase.diagram.right}
+              />
+            ) : null}
           </div>
         </section>
       )}
 
       {studies.length > 0 && (
         <section className="sol-cases">
-          <div className="container sol-cases-grid">
-            {studies.map((study, index) => (
-              <article
-                key={study.id}
-                className={`sol-case-card ${index === 0 ? 'featured' : ''}`}
-              >
-                <div className="sol-case-copy">
-                  <div className="sol-case-meta">
-                    <span>{study.metaLabel || `${study.industry} • ${study.capability}`}</span>
+          <div className="container">
+            {solution.cases && (
+              <div className="sol-cases-header">
+                <div className="sol-cases-heading">
+                  <h2>
+                    {solution.cases.titleBefore}{' '}
+                    <span className="blue-accent">{solution.cases.titleAccent}</span>
+                  </h2>
+                  {solution.cases.lead ? <p className="sol-lead">{solution.cases.lead}</p> : null}
+                </div>
+                <Button
+                  variant="type2"
+                  size="hero"
+                  onClick={() => navigate('/case-studies')}
+                >
+                  View all case studies
+                </Button>
+              </div>
+            )}
+            <div className="sol-cases-grid">
+              {studies.map((study, index) => {
+                const isFeatured = index === 0;
+                const media = (
+                  <div className="sol-case-media">
+                    {study.image ? (
+                      <img src={study.image} alt={study.client || study.title} />
+                    ) : (
+                      <div className="sol-case-placeholder">{study.client}</div>
+                    )}
                   </div>
-                  <h3>{study.cardTitle || study.title}</h3>
-                  {index === 0 && <p>{study.summary}</p>}
-                  <div className="sol-case-tags">
-                    {(study.tags || []).slice(0, 2).map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
+                );
+                const copy = (
+                  <div className="sol-case-copy">
+                    <div className="sol-case-meta">
+                      <span>{study.metaLabel || `${study.industry} • ${study.capability}`}</span>
+                    </div>
+                    <h3>{study.cardTitle || study.title}</h3>
+                    {isFeatured && <p>{study.summary}</p>}
+                    {!isFeatured && study.summary ? (
+                      <p className="sol-case-summary-short">{study.summary}</p>
+                    ) : null}
+                    <div className="sol-case-tags">
+                      {(study.tags || []).slice(0, 2).map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                    <Button
+                      variant="type2"
+                      size="hero"
+                      onClick={() => navigate(`/case-studies/${study.id}`)}
+                    >
+                      View Case Study
+                    </Button>
                   </div>
-                  <Button
-                    variant="type2"
-                    size="hero"
-                    onClick={() => navigate(`/case-studies/${study.id}`)}
+                );
+
+                return (
+                  <article
+                    key={study.id}
+                    className={`sol-case-card ${isFeatured ? 'featured' : 'stacked'}`}
                   >
-                    View Case Study
-                  </Button>
-                </div>
-                <div className="sol-case-media">
-                  {study.image ? (
-                    <img src={study.image} alt={study.client || study.title} />
-                  ) : (
-                    <div className="sol-case-placeholder">{study.client}</div>
-                  )}
-                </div>
-              </article>
-            ))}
+                    {isFeatured ? (
+                      <>
+                        {copy}
+                        {media}
+                      </>
+                    ) : (
+                      <>
+                        {media}
+                        {copy}
+                      </>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
           </div>
         </section>
       )}
@@ -264,19 +407,21 @@ export default function SolutionDetail({
       {solution.architecture && (
         <section className="sol-architecture">
           <div className="container">
-            <div className="section-pill">
-              <span className="dot" />
-              <span>{solution.architecture.pill}</span>
-            </div>
-            <h2>
+            <h2 className="center">
               {solution.architecture.titleBefore}{' '}
               <span className="blue-accent">{solution.architecture.titleAccent}</span>
             </h2>
-            <p className="sol-lead">{solution.architecture.lead}</p>
+            {solution.architecture.lead ? (
+              <p className="sol-lead center">{solution.architecture.lead}</p>
+            ) : null}
             <div className="sol-layers">
               {solution.architecture.layers.map((layer) => (
                 <article key={layer.title}>
-                  <div className="icon-dot" />
+                  {layer.icon ? (
+                    <img className="sol-layer-icon" src={layer.icon} alt="" width={40} height={40} />
+                  ) : (
+                    <div className="icon-dot" />
+                  )}
                   <h3>{layer.title}</h3>
                   <ul>
                     {layer.items.map((item) => (
@@ -337,47 +482,57 @@ export default function SolutionDetail({
           border-radius: 50%;
           background: var(--primary);
         }
+
         .sol-hero {
-          padding: 150px 0 72px;
+          padding: 140px 0 80px;
           background:
-            radial-gradient(ellipse 80% 60% at 50% -10%, rgba(52,136,255,0.55), transparent 70%),
-            linear-gradient(180deg, #6BA8FF 0%, #D7E8FF 42%, #FFFFFF 78%);
+            radial-gradient(ellipse 90% 70% at 50% -18%, rgba(52,136,255,0.42), transparent 68%),
+            linear-gradient(180deg, #B7D4FF 0%, #E8F1FF 38%, #FFFFFF 78%);
           text-align: center;
         }
-        .sol-hero-inner { max-width: 900px; margin: 0 auto; }
+        .sol-hero-inner {
+          max-width: 860px;
+          margin: 0 auto;
+          padding-left: 40px;
+          padding-right: 40px;
+        }
         .sol-hero .section-pill.light {
-          margin: 0 auto 22px;
-          background: rgba(255,255,255,0.55);
-          border-color: rgba(255,255,255,0.7);
-          color: #0F172A;
+          margin: 0 auto 20px;
+          background: rgba(255,255,255,0.72);
+          border-color: rgba(52,136,255,0.22);
+          color: var(--primary);
         }
         .sol-hero h1 {
-          margin: 0 0 18px;
-          font-size: 56px;
-          line-height: 66px;
+          margin: 0 auto 16px;
+          max-width: 780px;
+          font-size: 52px;
+          line-height: 62px;
           font-weight: 600;
-          color: #fff;
+          color: #0F172A;
+          letter-spacing: -0.5px;
         }
         .sol-hero .accent-italic {
-          color: #DCEEFF;
+          color: #3488FF;
           font-style: italic;
           font-weight: 500;
         }
         .sol-hero p {
           margin: 0 auto 28px;
-          max-width: 680px;
-          color: rgba(15,23,42,0.72);
+          max-width: 640px;
+          color: #475569;
           font-size: 16px;
           line-height: 26px;
         }
         .sol-hero-actions {
           display: flex;
           justify-content: center;
+          align-items: center;
           flex-wrap: wrap;
-          gap: 12px;
+          gap: 14px;
         }
 
         .sol-problem,
+        .sol-methodology,
         .sol-challenges,
         .sol-why,
         .sol-pain,
@@ -387,23 +542,26 @@ export default function SolutionDetail({
         .sol-cases,
         .sol-architecture,
         .sol-process {
-          padding: 80px 0;
+          padding: 96px 0;
         }
 
         .sol-lead {
-          margin: 12px 0 36px;
+          margin: 14px 0 0;
           max-width: 720px;
           color: var(--body);
           font-size: 16px;
           line-height: 26px;
         }
         .sol-lead.center,
-        h2.center { text-align: center; margin-left: auto; margin-right: auto; }
-        .center-pill { margin-left: auto; margin-right: auto; }
+        h2.center {
+          text-align: center;
+          margin-left: auto;
+          margin-right: auto;
+        }
 
         .solution-detail h2 {
-          margin: 14px 0 0;
-          max-width: 820px;
+          margin: 0;
+          max-width: 860px;
           font-size: 40px;
           line-height: 50px;
           font-weight: 600;
@@ -415,33 +573,44 @@ export default function SolutionDetail({
           font-style: italic;
           font-weight: 500;
           font-size: 18px;
+          line-height: 1;
         }
         .icon-dot {
-          width: 36px;
-          height: 36px;
-          border-radius: 10px;
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
           background: #EAF2FF;
           margin-bottom: 16px;
           position: relative;
+          flex-shrink: 0;
         }
         .icon-dot::after {
           content: '';
           position: absolute;
-          inset: 11px;
+          inset: 12px;
           border-radius: 999px;
           background: var(--primary);
         }
 
+        .sol-problem-heading {
+          margin-bottom: 40px;
+          max-width: 760px;
+        }
+        .sol-problem-heading .sol-lead {
+          margin-top: 14px;
+        }
         .sol-problem-grid {
           display: grid;
-          grid-template-columns: 1.05fr 0.95fr;
-          gap: 28px;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 48px;
           align-items: stretch;
         }
         .sol-problem-media {
           border-radius: 28px;
           overflow: hidden;
-          min-height: 420px;
+          aspect-ratio: 1 / 1.02;
+          min-height: 0;
+          height: 100%;
           background: #EEF0F4;
         }
         .sol-problem-media img {
@@ -453,27 +622,79 @@ export default function SolutionDetail({
         .sol-problem-list {
           list-style: none;
           margin: 0;
-          padding: 8px 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 100%;
         }
         .sol-problem-list li {
-          display: grid;
-          grid-template-columns: 42px 1fr;
-          gap: 14px;
-          padding: 18px 0;
+          padding: 16px 0;
           border-bottom: 1px solid #E8ECF2;
         }
-        .sol-problem-list li:last-child { border-bottom: none; }
+        .sol-problem-list li:first-child { padding-top: 0; }
+        .sol-problem-list li:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
         .sol-problem-list strong {
           display: block;
-          margin-bottom: 4px;
+          margin-bottom: 6px;
           color: var(--heading);
           font-size: 16px;
+          font-weight: 600;
+          line-height: 24px;
         }
         .sol-problem-list p {
           margin: 0;
           color: var(--body);
           font-size: 14px;
           line-height: 22px;
+        }
+
+        .sol-methodology {
+          background: #FFFFFF;
+        }
+        .sol-methodology-header {
+          margin-bottom: 44px;
+          max-width: 720px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .sol-methodology-header .sol-lead {
+          margin-top: 14px;
+        }
+        .sol-method-grid {
+          display: grid;
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+          gap: 14px;
+          align-items: stretch;
+        }
+        .sol-method-card {
+          background: #F5F7FA;
+          border-radius: 20px;
+          padding: 24px 18px;
+          min-height: 230px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .sol-method-card .num {
+          font-size: 20px;
+          line-height: 1;
+        }
+        .sol-method-card h3 {
+          margin: 16px 0 10px;
+          font-size: 16px;
+          line-height: 22px;
+          font-weight: 600;
+          color: var(--heading);
+        }
+        .sol-method-card p {
+          margin: 0;
+          font-size: 13px;
+          line-height: 20px;
+          color: var(--body);
         }
 
         .sol-challenge-grid,
@@ -512,19 +733,35 @@ export default function SolutionDetail({
           line-height: 22px;
         }
 
+        .sol-pain-title {
+          max-width: 820px;
+          margin-bottom: 40px;
+        }
         .sol-pain-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          grid-template-rows: repeat(2, minmax(140px, auto));
-          gap: 16px;
+          grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(280px, 1.12fr);
+          grid-template-rows: repeat(2, minmax(160px, 1fr));
+          gap: 20px;
+          align-items: stretch;
         }
         .sol-pain-card {
           background: #F5F7FA;
           border-radius: 24px;
-          padding: 24px;
+          padding: 28px 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          min-height: 160px;
+        }
+        .sol-pain-icon {
+          width: 40px;
+          height: 40px;
+          display: block;
+          object-fit: contain;
         }
         .sol-pain-card p {
           margin: 0;
+          margin-top: auto;
           font-size: 18px;
           line-height: 26px;
           color: var(--heading);
@@ -536,7 +773,7 @@ export default function SolutionDetail({
           background: var(--primary);
           color: #fff;
           border-radius: 28px;
-          padding: 32px;
+          padding: 36px 32px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -545,9 +782,10 @@ export default function SolutionDetail({
         .sol-highlight-card .brand {
           font-size: 28px;
           font-weight: 700;
+          line-height: 1.2;
         }
         .sol-highlight-card p {
-          margin: 24px 0;
+          margin: 32px 0;
           font-size: 28px;
           line-height: 36px;
           font-weight: 500;
@@ -555,10 +793,12 @@ export default function SolutionDetail({
         .sol-highlight-card button {
           align-self: flex-start;
           border: none;
-          background: rgba(255,255,255,0.92);
+          background: rgba(255,255,255,0.96);
           color: #0F172A;
           border-radius: 14px;
           padding: 12px 18px;
+          font-family: inherit;
+          font-size: 14px;
           font-weight: 500;
           cursor: pointer;
         }
@@ -588,42 +828,150 @@ export default function SolutionDetail({
           line-height: 24px;
         }
 
-        .sol-cap-list {
-          margin-top: 28px;
+        .sol-cap-panel {
           background: #F5F7FA;
-          border-radius: 28px;
-          padding: 8px 28px;
+          border-radius: 32px;
+          padding: 44px 48px;
+        }
+        .sol-cap-header {
+          margin-bottom: 8px;
+          max-width: 720px;
+        }
+        .sol-cap-header .sol-lead {
+          margin-top: 12px;
+          margin-bottom: 8px;
+        }
+        .sol-cap-list {
+          margin-top: 12px;
         }
         .sol-cap-row {
           display: flex;
           align-items: center;
-          gap: 20px;
-          padding: 26px 0;
+          gap: 18px;
+          padding: 30px 0;
           border-bottom: 1px solid #E4E8EF;
         }
-        .sol-cap-row:last-child { border-bottom: none; }
+        .sol-cap-row:last-child { border-bottom: none; padding-bottom: 4px; }
+        .sol-cap-row:first-child { padding-top: 18px; }
         .sol-cap-row strong {
-          font-size: 22px;
+          font-size: 24px;
+          line-height: 32px;
           color: var(--heading);
           font-weight: 600;
         }
 
+        .sol-showcase {
+          padding-top: 80px;
+          padding-bottom: 48px;
+        }
+        .sol-showcase-title {
+          margin-bottom: 56px;
+          max-width: 820px;
+        }
+        .sol-arch-diagram {
+          display: grid;
+          grid-template-columns: minmax(140px, 1fr) minmax(260px, 360px) minmax(140px, 1fr);
+          align-items: center;
+          gap: 20px 32px;
+          max-width: 1040px;
+          margin: 0 auto;
+          min-height: 380px;
+        }
+        .sol-arch-side {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 280px;
+        }
+        .sol-arch-left { align-items: flex-end; }
+        .sol-arch-right { align-items: flex-start; }
+        .sol-arch-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 14px;
+          color: var(--heading);
+          font-size: 16px;
+          font-weight: 500;
+          white-space: nowrap;
+        }
+        .sol-arch-label i {
+          width: 72px;
+          height: 1px;
+          background: linear-gradient(90deg, rgba(52,136,255,0.15), rgba(52,136,255,0.9));
+          display: block;
+          flex-shrink: 0;
+        }
+        .sol-arch-left .sol-arch-label i {
+          background: linear-gradient(90deg, rgba(52,136,255,0.9), rgba(52,136,255,0.15));
+        }
+        .sol-arch-stack {
+          height: 340px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          perspective: 900px;
+        }
+        .sol-arch-stack-inner {
+          position: relative;
+          width: 100%;
+          height: 280px;
+          transform-style: preserve-3d;
+        }
+        .sol-arch-layer {
+          position: absolute;
+          left: 50%;
+          height: 58px;
+          border-radius: 18px;
+          background: linear-gradient(135deg, rgba(52,136,255,0.95), rgba(105,168,255,0.58));
+          box-shadow:
+            0 16px 36px rgba(52,136,255,0.16),
+            inset 0 1px 0 rgba(255,255,255,0.4);
+          border: 1px solid rgba(255,255,255,0.38);
+          transform-origin: center center;
+          transform: translateX(-50%) rotateX(62deg) rotateZ(-42deg);
+        }
+        .sol-arch-layer.layer-0 { top: 18px; width: 58%; }
+        .sol-arch-layer.layer-1 { top: 62px; width: 66%; }
+        .sol-arch-layer.layer-2 { top: 106px; width: 74%; }
+        .sol-arch-layer.layer-3 { top: 150px; width: 82%; }
+        .sol-arch-layer.layer-4 { top: 194px; width: 90%; }
+
+        .sol-cases-header {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 24px;
+          margin-bottom: 36px;
+        }
+        .sol-cases-heading {
+          max-width: 720px;
+        }
+        .sol-cases-header .sol-lead {
+          margin-top: 12px;
+        }
         .sol-cases-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 18px;
+          gap: 20px;
+          align-items: stretch;
         }
         .sol-case-card {
           background: #F5F7FA;
           border-radius: 28px;
-          padding: 24px;
+          padding: 20px;
           display: grid;
           gap: 18px;
+          min-height: 100%;
+        }
+        .sol-case-card.stacked {
+          grid-template-rows: 220px 1fr;
         }
         .sol-case-card.featured {
           grid-column: 1 / -1;
-          grid-template-columns: 1.1fr 0.9fr;
-          align-items: center;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          align-items: stretch;
+          padding: 28px;
+          gap: 28px;
         }
         .sol-case-meta {
           margin-bottom: 10px;
@@ -636,11 +984,21 @@ export default function SolutionDetail({
           line-height: 32px;
           color: var(--heading);
         }
+        .sol-case-card.featured h3 {
+          font-size: 28px;
+          line-height: 36px;
+        }
         .sol-case-card p {
           margin: 0 0 16px;
           color: var(--body);
           font-size: 15px;
           line-height: 24px;
+        }
+        .sol-case-summary-short {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
         .sol-case-tags {
           display: flex;
@@ -662,6 +1020,18 @@ export default function SolutionDetail({
           overflow: hidden;
           background: #E8ECF2;
           min-height: 220px;
+          height: 100%;
+        }
+        .sol-case-card.featured .sol-case-media {
+          min-height: 320px;
+        }
+        .sol-case-card.stacked .sol-case-copy {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .sol-case-card.stacked .sol-case-copy .figma-btn-master {
+          margin-top: auto;
         }
         .sol-case-media img {
           width: 100%;
@@ -677,20 +1047,33 @@ export default function SolutionDetail({
           font-weight: 600;
         }
 
+        .sol-architecture h2 {
+          max-width: 900px;
+        }
         .sol-layers {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 12px;
-          margin-top: 28px;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 0;
+          margin-top: 40px;
           background: #F5F7FA;
           border-radius: 28px;
-          padding: 20px;
+          padding: 32px 8px;
         }
         .sol-layers article {
-          padding: 16px 12px;
+          padding: 8px 20px;
           border-right: 1px solid #E4E8EF;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
         }
         .sol-layers article:last-child { border-right: none; }
+        .sol-layer-icon {
+          width: 40px;
+          height: 40px;
+          object-fit: contain;
+          display: block;
+          margin-bottom: 16px;
+        }
         .sol-layers h3 {
           margin: 0 0 12px;
           font-size: 18px;
@@ -704,28 +1087,78 @@ export default function SolutionDetail({
           line-height: 24px;
         }
 
+        @media (max-width: 1100px) {
+          .sol-method-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+          .sol-cases-header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+        }
+
         @media (max-width: 980px) {
           .sol-hero h1 { font-size: 36px; line-height: 44px; }
           .solution-detail h2 { font-size: 30px; line-height: 38px; }
           .sol-problem-grid,
           .sol-case-card.featured,
-          .sol-pain-grid {
+          .sol-pain-grid,
+          .sol-arch-diagram {
             grid-template-columns: 1fr;
           }
           .sol-highlight-card {
             grid-column: auto;
             grid-row: auto;
+            min-height: 240px;
           }
           .sol-challenge-grid,
           .sol-why-grid,
           .sol-approach-cards,
           .sol-process-grid,
           .sol-cases-grid,
-          .sol-layers {
+          .sol-layers,
+          .sol-method-grid {
             grid-template-columns: 1fr;
           }
-          .sol-layers article { border-right: none; border-bottom: 1px solid #E4E8EF; }
+          .sol-case-card.stacked {
+            grid-template-rows: 200px auto;
+          }
+          .sol-layers article {
+            border-right: none;
+            border-bottom: 1px solid #E4E8EF;
+            padding: 20px 8px;
+          }
           .sol-layers article:last-child { border-bottom: none; }
+          .sol-arch-side {
+            height: auto;
+            gap: 18px;
+          }
+          .sol-arch-left,
+          .sol-arch-right {
+            align-items: center;
+          }
+          .sol-arch-label i { width: 40px; }
+          .sol-cap-panel { padding: 28px 22px; }
+          .sol-cap-row strong { font-size: 18px; line-height: 26px; }
+          .sol-problem-media {
+            aspect-ratio: 16 / 11;
+            height: auto;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .sol-method-grid {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding-bottom: 8px;
+            scroll-snap-type: x mandatory;
+          }
+          .sol-method-card {
+            flex: 0 0 78%;
+            scroll-snap-align: start;
+            min-height: 200px;
+          }
         }
       `}</style>
     </div>

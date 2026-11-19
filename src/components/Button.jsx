@@ -23,12 +23,14 @@ export default function Button({
       label === 'View all' ||
       label === 'View all case study' ||
       label === 'View all case studies' ||
+      label === 'View All Products' ||
       label === 'View Case Study' ||
       label === 'Explore Solutions' ||
       label === 'Explore Product' ||
       label === 'Explore Now' ||
       label === 'See Our Work' ||
-      label === 'Enquire Now'
+      label === 'Enquire Now' ||
+      label === 'About Us'
     ) {
       resolvedType = 'type2';
     } else if (label === 'Discuss Your Challenge') {

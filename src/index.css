@@ -30,7 +30,12 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+}
+
+/* Keep horizontal clip off body/html so ScrollTrigger pin works */
+#root,
+.app-root {
+  overflow-x: clip;
 }
 
 /* Headings Rules */

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ABOUT_ASSETS } from '../../data/aboutAssets';
@@ -34,8 +34,16 @@ const CARDS = [
   },
 ];
 
+function progressToIndex(progress) {
+  const steps = CARDS.length;
+  if (progress >= 1) return steps - 1;
+  return Math.min(steps - 1, Math.floor(progress * steps));
+}
+
 export default function WhyDifferent() {
   const sectionRef = useRef(null);
+  const pinRef = useRef(null);
+  const activeRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(null);
   const [isDesktop, setIsDesktop] = useState(true);
@@ -50,38 +58,68 @@ export default function WhyDifferent() {
     return () => mq.removeEventListener('change', sync);
   }, []);
 
-  useEffect(() => {
-    if (prefersReducedMotion() || !isDesktop || !sectionRef.current) {
+  useLayoutEffect(() => {
+    if (prefersReducedMotion() || !isDesktop) {
       setActiveIndex(0);
+      activeRef.current = 0;
       return undefined;
     }
 
     const section = sectionRef.current;
+    const pinTarget = pinRef.current;
+    if (!section || !pinTarget) return undefined;
+
     setActiveIndex(0);
+    activeRef.current = 0;
+
+    const applyIndex = (next) => {
+      if (activeRef.current === next) return;
+      activeRef.current = next;
+      setActiveIndex(next);
+    };
+
+    // ~1 viewport of scroll per card while pinned, then release to next section.
+    const scrollPerCard = () => Math.max(720, Math.round(window.innerHeight * 0.95));
 
     const trigger = ScrollTrigger.create({
+      id: 'why-different-cards',
       trigger: section,
-      start: 'top 88px',
-      end: () => `+=${Math.round(window.innerHeight * 1.8)}`,
-      pin: true,
+      pin: pinTarget,
       pinSpacing: true,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        const steps = CARDS.length;
-        // Equal scroll share per card while the section stays pinned.
-        const next = Math.min(steps - 1, Math.floor(self.progress * steps));
-        setActiveIndex((prev) => (prev === next ? prev : next));
+      start: 'top top+=88',
+      end: () => `+=${scrollPerCard() * CARDS.length}`,
+      // Snap to each card band (0 / 1/3 / 2/3 / 1) so one card opens per scroll step.
+      snap: {
+        snapTo: 1 / CARDS.length,
+        duration: { min: 0.1, max: 0.28 },
+        delay: 0.02,
+        ease: 'power1.out',
       },
-      onEnter: () => setActiveIndex(0),
-      onEnterBack: () => setActiveIndex(CARDS.length - 1),
-      onLeaveBack: () => setActiveIndex(0),
+      onUpdate: (self) => {
+        applyIndex(progressToIndex(self.progress));
+      },
+      onEnter: () => applyIndex(0),
+      onEnterBack: () => applyIndex(CARDS.length - 1),
+      onLeave: () => applyIndex(CARDS.length - 1),
+      onLeaveBack: () => applyIndex(0),
+      onRefresh: (self) => {
+        applyIndex(progressToIndex(self.progress));
+      },
     });
 
-    const refreshId = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+    const refresh = () => ScrollTrigger.refresh();
+    const raf = window.requestAnimationFrame(refresh);
+    const t1 = window.setTimeout(refresh, 120);
+    const t2 = window.setTimeout(refresh, 480);
+    window.addEventListener('load', refresh);
 
     return () => {
-      window.cancelAnimationFrame(refreshId);
+      window.cancelAnimationFrame(raf);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.removeEventListener('load', refresh);
       trigger.kill();
     };
   }, [isDesktop]);
@@ -98,65 +136,69 @@ export default function WhyDifferent() {
 
   return (
     <section className="why-different-section" ref={sectionRef}>
-      <div className="container">
-        <div className="why-diff-header" data-reveal>
-          <div className="section-pill">
-            <span className="dot" />
-            <span>What makes Pirai different</span>
+      <div className="why-diff-pin" ref={pinRef}>
+        <div className="container">
+          <div className="why-diff-header">
+            <div className="section-pill">
+              <span className="dot" />
+              <span>What makes Pirai different</span>
+            </div>
+            <h2 className="why-diff-title">
+              <span className="blue">A partner </span>
+              accountable for the outcome.
+            </h2>
           </div>
-          <h2 className="why-diff-title">
-            <span className="blue">A partner </span>
-            accountable for the outcome.
-          </h2>
-        </div>
 
-        <div
-          className={`why-diff-grid${isDesktop ? ' is-desktop' : ''}`}
-          data-reveal
-          data-reveal-y="24"
-          onMouseLeave={handleLeave}
-        >
-          {CARDS.map(({ title, titleKey, text, icon, photo }, index) => {
-            const reduced = prefersReducedMotion();
-            const isActive = !isDesktop
-              ? true
-              : reduced
-                ? index === 0
-                : index === displayIndex;
+          <div
+            className={`why-diff-grid${isDesktop ? ' is-desktop' : ''}`}
+            onMouseLeave={handleLeave}
+          >
+            {CARDS.map(({ title, titleKey, text, icon, photo }, index) => {
+              const reduced = prefersReducedMotion();
+              const isActive = !isDesktop
+                ? true
+                : reduced
+                  ? index === 0
+                  : index === displayIndex;
 
-            return (
-              <article
-                key={titleKey || title}
-                className={`why-diff-card${isActive ? ' is-active' : ''}`}
-                onMouseEnter={() => handleEnter(index)}
-                onFocus={() => handleEnter(index)}
-              >
-                <div className="why-diff-icon">
-                  <img src={icon} alt="" width={100} height={100} draggable={false} />
-                </div>
-
-                <div className="why-diff-copy">
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                </div>
-
-                {photo ? (
-                  <div className="why-diff-photo" aria-hidden={!isActive}>
-                    <img src={photo} alt="" width={140} height={140} draggable={false} />
+              return (
+                <article
+                  key={titleKey || title}
+                  className={`why-diff-card${isActive ? ' is-active' : ''}`}
+                  onMouseEnter={() => handleEnter(index)}
+                  onFocus={() => handleEnter(index)}
+                >
+                  <div className="why-diff-icon">
+                    <img src={icon} alt="" width={100} height={100} draggable={false} />
                   </div>
-                ) : null}
-              </article>
-            );
-          })}
+
+                  <div className="why-diff-copy">
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                  </div>
+
+                  {photo ? (
+                    <div className="why-diff-photo" aria-hidden={!isActive}>
+                      <img src={photo} alt="" width={140} height={140} draggable={false} />
+                    </div>
+                  ) : null}
+                </article>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       <style>{`
         .why-different-section {
-          padding: 80px 0;
           background: #FFFFFF;
           position: relative;
           z-index: 2;
+        }
+        .why-diff-pin {
+          padding: 80px 0;
+          background: #FFFFFF;
+          will-change: transform;
         }
         .why-diff-header {
           margin-bottom: 48px;
@@ -296,6 +338,9 @@ export default function WhyDifferent() {
         }
 
         @media (max-width: 990px) {
+          .why-diff-pin {
+            padding: 64px 0;
+          }
           .why-diff-card {
             min-height: 240px;
             flex: 1 1 auto;

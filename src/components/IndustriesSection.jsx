@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import Button from './Button';
 import { HOMEPAGE_ASSETS } from '../data/homepageAssets';
 
 // GREEN DOUBLE-CHECKMARK ICON FOR CHECKLIST ITEMS
@@ -12,7 +12,7 @@ function DoubleCheckIcon({ size = 16, color = "#10B981" }) {
   );
 }
 
-export default function IndustriesSection({ onSelectIndustry }) {
+export default function IndustriesSection({ onSelectIndustry, onViewDetails }) {
   // ROW 1: BFSI (358px width) & Healthcare (Fills remaining space)
   const bfsiCard = {
     id: 'bfsi',
@@ -138,14 +138,10 @@ export default function IndustriesSection({ onSelectIndustry }) {
             </p>
           </div>
 
-          {/* Top-Right: "View Details" link with small text label to left of separate 40x40 blue chip */}
           <div className="header-right">
-            <div className="view-details-link">
-              <span className="view-details-text">View Details</span>
-              <div className="chip-icon-box">
-                <ArrowUpRight size={20} color="#FFFFFF" />
-              </div>
-            </div>
+            <Button variant="type2" size="hero" onClick={onViewDetails}>
+              View Details
+            </Button>
           </div>
         </div>
 
@@ -211,37 +207,6 @@ export default function IndustriesSection({ onSelectIndustry }) {
           line-height: 26px;
           color: #475569;
           max-width: 600px;
-        }
-
-        /* TOP-RIGHT VIEW DETAILS LINK */
-        .view-details-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          cursor: pointer;
-          transition: opacity 0.2s ease;
-        }
-
-        .view-details-link:hover {
-          opacity: 0.88;
-        }
-
-        .view-details-text {
-          font-family: 'Poppins', sans-serif;
-          font-size: 16px;
-          font-weight: 500;
-          color: #0F172A;
-        }
-
-        .chip-icon-box {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-          background-color: #3488FF;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 12px rgba(52, 136, 255, 0.2);
         }
 
         /* BENTO GRID OUTER CONTAINER: Light gray #EEF0F4, 32px rounded, 24px padding */

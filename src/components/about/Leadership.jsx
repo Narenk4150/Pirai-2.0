@@ -53,14 +53,14 @@ export default function Leadership() {
                   <div className="leader-socials">
                     <Link
                       to={profileTo}
-                      className="social-btn"
+                      className="social-btn social-btn-profile"
                       aria-label={`View ${person.name} profile`}
                     >
                       <img src={PROFILE_ICON} alt="" width={18} height={18} />
                     </Link>
                     <a
                       href={linkedinHref}
-                      className="social-btn"
+                      className="social-btn social-btn-linkedin"
                       aria-label={`${person.name} on LinkedIn`}
                       target={linkedinHref.startsWith('http') ? '_blank' : undefined}
                       rel={linkedinHref.startsWith('http') ? 'noopener noreferrer' : undefined}

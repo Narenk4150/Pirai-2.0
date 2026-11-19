@@ -34,6 +34,7 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // Default closed, user can click or hover
+  const [isScrolled, setIsScrolled] = useState(false);
   const navRef = useRef(null);
 
   // Close dropdown on click outside
@@ -46,6 +47,21 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const readY = () => window.__piraiLenis?.scroll ?? window.scrollY ?? 0;
+    const syncScroll = () => setIsScrolled(readY() > 12);
+
+    syncScroll();
+    window.addEventListener('scroll', syncScroll, { passive: true });
+    const lenis = window.__piraiLenis;
+    lenis?.on?.('scroll', syncScroll);
+
+    return () => {
+      window.removeEventListener('scroll', syncScroll);
+      lenis?.off?.('scroll', syncScroll);
+    };
+  }, [location.pathname]);
 
   const scrollToTarget = (target) => {
     if (target === 'home') {
@@ -217,7 +233,10 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
   };
 
   return (
-    <header className="custom-glass-navbar-header mega-menu-glass-panel-header" ref={navRef}>
+    <header
+      className={`custom-glass-navbar-header${isScrolled || activeDropdown || mobileMenuOpen ? ' is-scrolled' : ''}${activeDropdown ? ' is-menu-open' : ''}`}
+      ref={navRef}
+    >
       <div className="container navbar-container">
         
         {/* Logo (Left): Pirai brand mark */}
@@ -471,15 +490,7 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           color: #0f172a !important;
         }
 
-        .mega-menu-glass-panel-header {
-          background: rgba(255, 255, 255, 0.92) !important;
-          backdrop-filter: blur(40px) saturate(200%) !important;
-          -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.8) !important;
-          box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04) !important;
-        }
-
-        /* HEADER BAR */
+        /* HEADER BAR — transparent at top, frosted glass on scroll (not solid white) */
         .custom-glass-navbar-header {
           position: fixed;
           top: 0;
@@ -489,6 +500,32 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           height: 100px;
           display: flex;
           align-items: center;
+          background: transparent;
+          border-bottom: 1px solid transparent;
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+          transition:
+            background-color 0.28s ease,
+            border-color 0.28s ease,
+            box-shadow 0.28s ease,
+            backdrop-filter 0.28s ease;
+        }
+
+        .custom-glass-navbar-header.is-scrolled {
+          background: rgba(255, 255, 255, 0.55);
+          backdrop-filter: blur(18px) saturate(160%);
+          -webkit-backdrop-filter: blur(18px) saturate(160%);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+          box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .custom-glass-navbar-header.is-menu-open {
+          background: rgba(255, 255, 255, 0.72);
+          backdrop-filter: blur(22px) saturate(170%);
+          -webkit-backdrop-filter: blur(22px) saturate(170%);
+          border-bottom: 1px solid rgba(226, 232, 240, 0.55);
+          box-shadow: none;
         }
 
         .navbar-container {
