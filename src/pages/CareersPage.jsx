@@ -15,16 +15,27 @@ export default function CareersPage() {
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (window.__piraiLenis) {
+      window.__piraiLenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
     if (window.location.hash) {
       const el = document.querySelector(window.location.hash);
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
+      if (el) {
+        setTimeout(() => {
+          if (window.__piraiLenis) window.__piraiLenis.scrollTo(el, { offset: -90 });
+          else el.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+      }
     }
   }, []);
 
   const scrollToId = (id) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (!el) return;
+    if (window.__piraiLenis) window.__piraiLenis.scrollTo(el, { offset: -90 });
+    else el.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (

@@ -1,0 +1,15 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g2" x1="600" y1="0" x2="600" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EEF4FF"/>
+      <stop offset="0.48" stop-color="#D0E2FF"/>
+      <stop offset="1" stop-color="#B9D3FF"/>
+    </linearGradient>
+    <radialGradient id="glow2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(980 680) rotate(-90) scale(420 360)">
+      <stop stop-color="#3488FF" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#3488FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="800" rx="36" fill="url(#g2)"/>
+  <rect width="1200" height="800" rx="36" fill="url(#glow2)"/>
+</svg>

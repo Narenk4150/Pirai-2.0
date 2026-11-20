@@ -11,14 +11,15 @@ export default function SmoothScroll({ children }) {
   useEffect(() => {
     if (prefersReducedMotion()) return undefined;
 
-    // Arooth-like: fluid but responsive — avoid heavy inertia
+    // Fluid but responsive — avoid heavy inertia
     const lenis = new Lenis({
-      duration: 0.95,
+      duration: 1.05,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 1.15,
       syncTouch: false,
+      autoRaf: false,
     });
 
     lenis.on('scroll', ScrollTrigger.update);
@@ -31,6 +32,8 @@ export default function SmoothScroll({ children }) {
 
     window.__piraiLenis = lenis;
     document.documentElement.classList.add('lenis', 'lenis-smooth');
+    lenis.start();
+    ScrollTrigger.refresh();
 
     const onAnchorClick = (event) => {
       const link = event.target.closest('a[href^="#"]');
@@ -44,7 +47,10 @@ export default function SmoothScroll({ children }) {
     };
     document.addEventListener('click', onAnchorClick);
 
-    const onResize = () => ScrollTrigger.refresh();
+    const onResize = () => {
+      lenis.resize();
+      ScrollTrigger.refresh();
+    };
     window.addEventListener('resize', onResize);
 
     return () => {

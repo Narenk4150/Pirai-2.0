@@ -21,6 +21,11 @@ html {
   font-size: 16px;
 }
 
+/* Lenis owns wheel smoothing — native CSS smooth fights it */
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
 body {
   font-family: var(--font-family);
   background-color: #FFFFFF;
@@ -185,6 +190,28 @@ h3.row-title {
   width: 100%;
   height: 1px;
   background: var(--border);
+}
+
+/* Site-wide navbar: scroll-linked glass fade (inline --nav-fade drives opacity) */
+.custom-glass-navbar-header {
+  --nav-fade: 0;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition:
+    background-color 0.15s linear,
+    border-color 0.15s linear,
+    box-shadow 0.15s linear;
+}
+
+.custom-glass-navbar-header.is-menu-open {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(22px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.55) !important;
+  box-shadow: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -7,11 +7,11 @@ export default function CareersCTA({ onExplorePositions, onSubmitProfile }) {
       <div className="container">
         <div className="section-pill">
           <span className="dot" />
-          <span>Our Teams</span>
+          <span>Next Opportunity</span>
         </div>
         <h2>
-          Your next opportunity could{' '}
-          <span className="blue-accent">start here.</span>
+          Your next opportunity could
+          <span className="blue-accent cta-title-line">start here.</span>
         </h2>
         <p>
           We are always interested in connecting with people who are curious, driven and passionate about building meaningful technology.
@@ -28,7 +28,7 @@ export default function CareersCTA({ onExplorePositions, onSubmitProfile }) {
 
       <style>{`
         .careers-cta {
-          padding: 40px 0 80px;
+          padding: 48px 0 88px;
           background: #FFFFFF;
           text-align: center;
         }
@@ -52,8 +52,9 @@ export default function CareersCTA({ onExplorePositions, onSubmitProfile }) {
           background: var(--primary);
         }
         .careers-cta h2 {
-          margin: 0 auto 14px;
-          max-width: 680px;
+          margin: 0 auto 16px;
+          max-width: 720px;
+          font-family: 'Poppins', sans-serif;
           font-size: 40px;
           line-height: 50px;
           font-weight: 600;
@@ -62,9 +63,12 @@ export default function CareersCTA({ onExplorePositions, onSubmitProfile }) {
         .careers-cta .blue-accent {
           color: var(--primary);
         }
+        .cta-title-line {
+          display: block;
+        }
         .careers-cta p {
-          margin: 0 auto 28px;
-          max-width: 620px;
+          margin: 0 auto 32px;
+          max-width: 580px;
           font-size: 16px;
           line-height: 26px;
           color: var(--body);
@@ -72,7 +76,7 @@ export default function CareersCTA({ onExplorePositions, onSubmitProfile }) {
         .careers-cta-actions {
           display: flex;
           flex-wrap: wrap;
-          gap: 12px;
+          gap: 14px;
           justify-content: center;
         }
         @media (max-width: 768px) {

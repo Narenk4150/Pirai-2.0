@@ -35,6 +35,7 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // Default closed, user can click or hover
   const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const navRef = useRef(null);
 
   // Close dropdown on click outside
@@ -49,17 +50,42 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
   }, []);
 
   useEffect(() => {
-    const readY = () => window.__piraiLenis?.scroll ?? window.scrollY ?? 0;
-    const syncScroll = () => setIsScrolled(readY() > 12);
+    const FADE_RANGE = 120;
+    const readY = () => {
+      const lenisY = window.__piraiLenis?.scroll;
+      if (typeof lenisY === 'number') return lenisY;
+      return window.scrollY || document.documentElement.scrollTop || 0;
+    };
+    const syncScroll = () => {
+      const y = readY();
+      const progress = Math.min(1, Math.max(0, y / FADE_RANGE));
+      setScrollProgress(progress);
+      setIsScrolled(progress > 0.12);
+    };
 
     syncScroll();
     window.addEventListener('scroll', syncScroll, { passive: true });
-    const lenis = window.__piraiLenis;
-    lenis?.on?.('scroll', syncScroll);
+    document.addEventListener('scroll', syncScroll, { passive: true });
+
+    let boundLenis = null;
+    const bindLenis = () => {
+      const lenis = window.__piraiLenis;
+      if (!lenis || lenis === boundLenis) return;
+      boundLenis?.off?.('scroll', syncScroll);
+      lenis.on('scroll', syncScroll);
+      boundLenis = lenis;
+      syncScroll();
+    };
+    bindLenis();
+    const bindTimer = window.setInterval(bindLenis, 250);
+    const stopBind = window.setTimeout(() => window.clearInterval(bindTimer), 2500);
 
     return () => {
       window.removeEventListener('scroll', syncScroll);
-      lenis?.off?.('scroll', syncScroll);
+      document.removeEventListener('scroll', syncScroll);
+      window.clearInterval(bindTimer);
+      window.clearTimeout(stopBind);
+      boundLenis?.off?.('scroll', syncScroll);
     };
   }, [location.pathname]);
 
@@ -232,10 +258,23 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
     image: '/images/featured_insight.png',
   };
 
+  const isSolutionPage = location.pathname.startsWith('/solutions');
+  const menuOpen = Boolean(activeDropdown) || mobileMenuOpen;
+  const showLightChrome = isScrolled || menuOpen;
+  const navFade = menuOpen ? 1 : scrollProgress;
+
   return (
     <header
-      className={`custom-glass-navbar-header${isScrolled || activeDropdown || mobileMenuOpen ? ' is-scrolled' : ''}${activeDropdown ? ' is-menu-open' : ''}`}
+      className={`custom-glass-navbar-header${showLightChrome ? ' is-scrolled' : ''}${activeDropdown ? ' is-menu-open' : ''}${isSolutionPage ? ' is-on-solution' : ''}`}
       ref={navRef}
+      style={{
+        '--nav-fade': navFade,
+        backgroundColor: `rgba(255, 255, 255, ${0.58 * navFade})`,
+        backdropFilter: navFade > 0.02 ? `blur(${18 * navFade}px) saturate(${100 + 60 * navFade}%)` : 'none',
+        WebkitBackdropFilter: navFade > 0.02 ? `blur(${18 * navFade}px) saturate(${100 + 60 * navFade}%)` : 'none',
+        borderBottomColor: `rgba(255, 255, 255, ${0.38 * navFade})`,
+        boxShadow: navFade > 0.05 ? `0 8px 28px rgba(15, 23, 42, ${0.06 * navFade})` : 'none',
+      }}
     >
       <div className="container navbar-container">
         
@@ -246,6 +285,14 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
             alt="Pirai"
             className="brand-logo-img"
           />
+          {isSolutionPage && (
+            <img
+              src="/images/Homepage/pirai-logo.png"
+              alt=""
+              aria-hidden="true"
+              className="brand-logo-img brand-logo-img-light"
+            />
+          )}
         </div>
 
         {/* Center Nav Links: Solutions –, Products +, Company +, Case study + */}
@@ -490,7 +537,7 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           color: #0f172a !important;
         }
 
-        /* HEADER BAR — transparent at top, frosted glass on scroll (not solid white) */
+        /* Layout only — glass scroll styles live in index.css (site-wide) */
         .custom-glass-navbar-header {
           position: fixed;
           top: 0;
@@ -500,48 +547,21 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           height: 100px;
           display: flex;
           align-items: center;
-          background: transparent;
-          border-bottom: 1px solid transparent;
-          box-shadow: none;
-          backdrop-filter: none;
-          -webkit-backdrop-filter: none;
-          transition:
-            background-color 0.28s ease,
-            border-color 0.28s ease,
-            box-shadow 0.28s ease,
-            backdrop-filter 0.28s ease;
-        }
-
-        .custom-glass-navbar-header.is-scrolled {
-          background: rgba(255, 255, 255, 0.55);
-          backdrop-filter: blur(18px) saturate(160%);
-          -webkit-backdrop-filter: blur(18px) saturate(160%);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-          box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
-        }
-
-        .custom-glass-navbar-header.is-menu-open {
-          background: rgba(255, 255, 255, 0.72);
-          backdrop-filter: blur(22px) saturate(170%);
-          -webkit-backdrop-filter: blur(22px) saturate(170%);
-          border-bottom: 1px solid rgba(226, 232, 240, 0.55);
-          box-shadow: none;
         }
 
         .navbar-container {
-          display: flex;
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
           align-items: center;
-          justify-content: space-between;
           width: 100%;
-          padding: 0 40px;
-          max-width: 1280px;
-          margin: 0 auto;
         }
 
         .brand-logo {
+          position: relative;
           cursor: pointer;
           display: flex;
           align-items: center;
+          justify-self: start;
           height: 32px;
           flex-shrink: 0;
         }
@@ -552,6 +572,17 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           max-width: 110px;
           display: block;
           object-fit: contain;
+        }
+
+        .brand-logo-img-light {
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          filter: brightness(0) invert(1);
+          opacity: calc(1 - var(--nav-fade, 0));
+          pointer-events: none;
+          transition: opacity 0.15s linear;
         }
 
         .logo-blue-text {
@@ -566,6 +597,8 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
         .desktop-center-nav {
           display: flex;
           align-items: center;
+          justify-content: center;
+          justify-self: center;
           gap: 40px;
         }
 
@@ -589,7 +622,7 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           gap: 4px;
           padding: 0;
           border-radius: 0;
-          transition: color 0.2s ease;
+          transition: color 0.45s ease;
         }
 
         .custom-glass-nav-link:hover, .custom-glass-nav-link.active {
@@ -601,15 +634,36 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
           font-weight: 400;
           color: #475569;
           line-height: 1;
+          transition: color 0.45s ease;
         }
 
         .custom-glass-nav-link:hover .indicator-symbol, .custom-glass-nav-link.active .indicator-symbol {
           color: #3488FF;
         }
 
+        /* Solution pages: white → dark as glass fades in */
+        .custom-glass-navbar-header.is-on-solution .custom-glass-nav-link,
+        .custom-glass-navbar-header.is-on-solution .indicator-symbol {
+          color: color-mix(in srgb, #ffffff calc((1 - var(--nav-fade, 0)) * 100%), #475569 calc(var(--nav-fade, 0) * 100%));
+        }
+
+        .custom-glass-navbar-header.is-on-solution .custom-glass-nav-link:hover,
+        .custom-glass-navbar-header.is-on-solution .custom-glass-nav-link.active,
+        .custom-glass-navbar-header.is-on-solution .custom-glass-nav-link:hover .indicator-symbol,
+        .custom-glass-navbar-header.is-on-solution .custom-glass-nav-link.active .indicator-symbol {
+          color: color-mix(in srgb, #ffffff calc((1 - var(--nav-fade, 0)) * 100%), #3488FF calc(var(--nav-fade, 0) * 100%));
+        }
+
+        .custom-glass-navbar-header.is-on-solution .mobile-toggle {
+          color: color-mix(in srgb, #ffffff calc((1 - var(--nav-fade, 0)) * 100%), #0f172a calc(var(--nav-fade, 0) * 100%));
+          transition: color 0.15s linear;
+        }
+
         .nav-actions {
           display: flex;
           align-items: center;
+          justify-content: flex-end;
+          justify-self: end;
           gap: 16px;
         }
 
@@ -871,6 +925,10 @@ export default function Navbar({ onRequestDemo, onNavigate }) {
         }
 
         @media (max-width: 1024px) {
+          .navbar-container {
+            display: flex;
+            justify-content: space-between;
+          }
           .desktop-center-nav {
             display: none;
           }

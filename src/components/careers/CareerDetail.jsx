@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Briefcase, MapPin } from 'lucide-react';
 import Button from '../Button';
+import { CAREER_META_ICONS } from '../../data/careers';
 
 export default function CareerDetail({ job, onApply }) {
   return (
@@ -11,8 +11,14 @@ export default function CareerDetail({ job, onApply }) {
           <div className="cd-department">{job.department}</div>
           <h1>{job.title}</h1>
           <div className="cd-meta">
-            <span><MapPin size={16} /> {job.detailLocation || job.location}</span>
-            <span><Briefcase size={16} /> {job.detailExperience || job.experience}</span>
+            <span>
+              <img src={CAREER_META_ICONS.location} alt="" width={16} height={16} />
+              {job.detailLocation || job.location}
+            </span>
+            <span>
+              <img src={CAREER_META_ICONS.experience} alt="" width={16} height={16} />
+              {job.detailExperience || job.experience}
+            </span>
           </div>
           <Button variant="type2" size="hero" onClick={onApply}>
             Apply Now
@@ -98,6 +104,12 @@ export default function CareerDetail({ job, onApply }) {
           display: inline-flex;
           align-items: center;
           gap: 8px;
+        }
+        .cd-meta img {
+          width: 16px;
+          height: 16px;
+          object-fit: contain;
+          flex-shrink: 0;
         }
         .cd-body {
           padding: 48px 0 40px;

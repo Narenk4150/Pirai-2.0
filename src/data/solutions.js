@@ -3,13 +3,13 @@ export const SOLUTIONS = [
     id: 'intelligent-automation',
     aliases: ['ai-automation', 'ai-&-intelligent-automation'],
     navLabels: ['AI Automation', 'Intelligent Automation', 'AI & Intelligent Automation'],
-    pill: 'Intelligent Automation',
+    pill: 'AI & Intelligent Automation',
     heroTitle: 'Turn Complex Operations Into',
     heroAccent: 'Intelligent Workflows',
     lead:
       'Pirai connects AI, workflows and enterprise systems to automate repetitive work and improve how teams operate.',
-    primaryCta: 'Explore the solution',
-    secondaryCta: 'View Case Studies',
+    primaryCta: 'Discuss Your Challenge',
+    secondaryCta: 'Explore Capabilities',
     secondaryCtaTarget: 'cases',
     problem: {
       pill: 'The Enterprise Problem',
@@ -47,46 +47,50 @@ export const SOLUTIONS = [
       ],
     },
     methodology: {
+      pill: 'How Pirai Works',
       titleBefore: 'One method,',
       titleAccent: 'Six disciplined stages.',
       lead:
-        'A repeatable path from operational reality to governed intelligence — so AI becomes part of how the business runs.',
+        'The same repeatable sequence runs behind every engagement — from the first workflow map to a production rollout.',
       stages: [
         {
           number: '01',
           title: 'Understand',
-          body: 'Map the real workflow, constraints and decision points that shape day-to-day operations.',
+          body: 'Map the workflow, users, data and decisions.',
         },
         {
           number: '02',
-          title: 'Contextualise',
-          body: 'Ground models in enterprise data, policy and process so outputs reflect how work actually happens.',
+          title: 'Contextualize',
+          body: 'Grounding models in enterprise reality.',
         },
         {
           number: '03',
           title: 'Reason',
-          body: 'Apply structured reasoning to exceptions, priorities and handoffs — not just generate answers.',
+          body: 'Apply the right AI models & intelligence.',
         },
         {
           number: '04',
           title: 'Act',
-          body: 'Trigger the right systems and human steps so intelligence moves work forward safely.',
+          body: 'Automate workflows and decisions.',
         },
         {
           number: '05',
           title: 'Govern',
-          body: 'Keep auditability, approvals and controls in the loop from the first production release.',
+          body: 'Keep humans, policies and controls in the loop.',
         },
         {
           number: '06',
           title: 'Learn',
-          body: 'Measure outcomes, capture feedback and improve the system with every operating cycle.',
+          body: 'Measure outcomes and continuously improve.',
         },
       ],
     },
     pain: {
-      titleBefore: 'When intelligence can’t move through the workflow,',
+      pill: 'Operational Impact',
+      titleBefore: "When intelligence can't move through the workflow,",
       titleAccent: 'the business pays for it.',
+      lead:
+        'Every gap above shows up on the balance sheet — in lost hours, missed deadlines, and stalled AI investment.',
     },
     painCards: [
       {
@@ -116,32 +120,81 @@ export const SOLUTIONS = [
       titleBefore: 'Five capabilities,',
       titleAccent: 'One platform.',
       lead: 'Everything below plugs into the same architecture — nothing here is a bolt-on integration.',
+      numbered: true,
+      interactive: true,
       items: [
-        'AI Workflow Systems',
-        'Document Intelligence',
-        'LLM Integrations',
-        'AI Agents',
-        'Operational Automation',
+        {
+          title: 'AI Workflow Systems',
+          body: 'Orchestrate multi-step processes with AI decisions, system actions and human approvals in one flow.',
+        },
+        {
+          title: 'Document Intelligence',
+          body: 'Extract, classify and route information from documents into the systems that need to act on it.',
+        },
+        {
+          title: 'LLM Integrations',
+          body: 'Connect large language models to enterprise data, tools and policies so answers stay grounded.',
+        },
+        {
+          title: 'AI Agents',
+          body: 'Deploy agents that monitor, decide and execute within clear operational boundaries.',
+        },
+        {
+          title: 'Operational Automation',
+          body: 'Automate repetitive operational work while keeping auditability and exception handling intact.',
+        },
       ],
     },
     showcase: {
       pill: 'Intelligent Enterprise',
-      titleBefore: 'Intelligence designed around your',
+      titleBefore: 'Intelligence designed around',
       titleAccent: 'enterprise architecture.',
+      titleYour: 'your',
       diagram: {
-        left: ['Workflow', 'Intelligence', 'Systems'],
-        right: ['Data', 'Outcomes', 'Governance'],
+        illustration: '/images/Services/AI%20Automation/AI%20Enterprise.svg',
+        // Visual top → bottom: matches top-down assemble (Inputs first, Outcomes last)
+        left: [
+          {
+            title: 'Context',
+            body: 'Knowledge bases, logic,\nand governance.',
+          },
+          {
+            title: 'Workflow',
+            body: 'Orchestration, rules,\nand human approvals.',
+          },
+          {
+            title: 'Outcomes',
+            body: 'Faster execution,\nless overhead.',
+          },
+        ],
+        right: [
+          {
+            title: 'Inputs',
+            body: 'Data, documents, APIs,\nand human entry.',
+          },
+          {
+            title: 'Intelligence',
+            body: 'LLMs, models,\nand AI agents.',
+          },
+          {
+            title: 'Systems',
+            body: 'ERP, CRM, and\noperational platforms.',
+          },
+        ],
       },
     },
     cases: {
+      pill: 'Selected work',
       titleBefore: 'AI that works',
       titleAccent: 'beyond the prototype.',
-      lead: 'Applied AI systems designed around real operating workflows — not demos that stall after the pilot.',
+      lead:
+        'A sample of engagements across regulated industries — each one designed around the team that has to run it every day.',
+      cta: 'View all case study',
     },
     architecture: {
       pill: 'The Full Stack',
-      titleBefore: 'Pirai adapts AI to the enterprise —',
-      titleAccent: 'not the enterprise to AI.',
+      titleBefore: 'Pirai adapts AI to the enterprise',
+      titleAccent: '— not the enterprise to AI.',
       lead: 'Five layers working together as one system — not five disconnected tools bolted onto the business.',
       layers: [
         {

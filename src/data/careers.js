@@ -1,24 +1,82 @@
+const CAREERS_IMG = '/images/careers';
+
 export const CAREER_TEAMS = [
-  { id: 'product-design', title: 'Product Design & UX', description: 'Shape product experiences that teams adopt on day one.' },
-  { id: 'frontend', title: 'Frontend Engineering', description: 'Build interfaces that stay fast, clear, and maintainable.' },
-  { id: 'backend', title: 'Backend Engineering', description: 'Design services and data layers that scale with the business.' },
-  { id: 'ai', title: 'AI & Intelligent Automation', description: 'Turn operational workflows into reliable intelligent systems.' },
-  { id: 'cloud', title: 'Cloud & Platform Systems', description: 'Engineer platforms that stay secure, observable, and resilient.' },
-  { id: 'data-quality', title: 'Data & Quality Engineering', description: 'Make data trustworthy and releases dependable.' },
+  {
+    id: 'product-design',
+    title: 'Product Design & UX',
+    description: 'Shape product experiences that teams adopt on day one.',
+    icon: `${CAREERS_IMG}/team-product-design.svg`,
+  },
+  {
+    id: 'frontend',
+    title: 'Frontend Engineering',
+    description: 'Build interfaces that stay fast, clear, and maintainable.',
+    icon: `${CAREERS_IMG}/team-frontend.svg`,
+  },
+  {
+    id: 'backend',
+    title: 'Backend Engineering',
+    description: 'Design services and data layers that scale with the business.',
+    icon: `${CAREERS_IMG}/team-backend.svg`,
+  },
+  {
+    id: 'ai',
+    title: 'AI & Intelligent Automation',
+    description: 'Turn operational workflows into reliable intelligent systems.',
+    icon: `${CAREERS_IMG}/team-ai.svg`,
+  },
+  {
+    id: 'cloud',
+    title: 'Cloud & Platform Systems',
+    description: 'Engineer platforms that stay secure, observable, and resilient.',
+    icon: `${CAREERS_IMG}/team-cloud.svg`,
+  },
+  {
+    id: 'data-quality',
+    title: 'Data & Quality Engineering',
+    description: 'Make data trustworthy and releases dependable.',
+    icon: `${CAREERS_IMG}/team-data.svg`,
+  },
 ];
 
 export const CAREER_WHY = [
   {
     title: 'Meaningful Work',
     description: 'Build digital products that solve real business challenges.',
+    icon: `${CAREERS_IMG}/why-meaningful-work.svg`,
   },
   {
     title: 'Collaborative Teams',
     description: 'Work with talented people across technology and design.',
+    icon: `${CAREERS_IMG}/why-collaborative-teams.svg`,
   },
   {
     title: 'Room to Grow',
     description: 'Learn, develop your skills and take on new challenges.',
+    icon: `${CAREERS_IMG}/why-room-to-grow.svg`,
+  },
+];
+
+export const CAREER_META_ICONS = {
+  location: `${CAREERS_IMG}/meta-location.svg`,
+  experience: `${CAREERS_IMG}/meta-experience.svg`,
+};
+
+export const CAREER_CULTURE = [
+  {
+    src: `${CAREERS_IMG}/culture-workshops.png`,
+    caption: 'Knowledge sharing and technology workshops',
+    className: 'tall',
+  },
+  {
+    src: `${CAREERS_IMG}/culture-brainstorms.png`,
+    caption: 'Architectural brainstorms & cross-functional engineering reviews',
+    className: 'wide',
+  },
+  {
+    src: `${CAREERS_IMG}/culture-milestones.png`,
+    caption: 'Celebrating milestones & team accomplishments',
+    className: 'wide',
   },
 ];
 
@@ -43,6 +101,7 @@ export const JOB_OPENINGS = [
     title: 'Senior Frontend Engineer',
     shortTitle: 'Senior Frontend Engineer [React / TypeScript]',
     department: 'Frontend',
+    employmentType: 'full-time',
     location: 'On-site / India',
     detailLocation: 'Pollachi, India',
     experience: '2-10 Years Experience',
@@ -74,6 +133,7 @@ export const JOB_OPENINGS = [
     title: 'Backend Platform Engineer',
     shortTitle: 'Backend Platform Engineer [Node.js / Python]',
     department: 'Backend',
+    employmentType: 'full-time',
     location: 'On-site / India',
     detailLocation: 'Pollachi, India',
     experience: '3-8 Years Experience',
@@ -104,6 +164,7 @@ export const JOB_OPENINGS = [
     title: 'AI Automation Engineer',
     shortTitle: 'AI Automation Engineer [Applied AI / Workflows]',
     department: 'AI',
+    employmentType: 'full-time',
     location: 'On-site / India',
     detailLocation: 'Pollachi, India',
     experience: '2-7 Years Experience',

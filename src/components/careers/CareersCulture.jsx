@@ -1,22 +1,5 @@
 import React from 'react';
-
-const GALLERY = [
-  {
-    src: '/images/careers/culture-1.png',
-    caption: 'Knowledge sharing and technology workshops',
-    className: 'tall',
-  },
-  {
-    src: '/images/careers/culture-2.png',
-    caption: 'Architectural brainstorms & cross-functional engineering reviews',
-    className: 'wide',
-  },
-  {
-    src: '/images/careers/culture-3.png',
-    caption: 'Celebrating milestones & team accomplishments',
-    className: 'wide',
-  },
-];
+import { CAREER_CULTURE } from '../../data/careers';
 
 export default function CareersCulture() {
   return (
@@ -37,9 +20,10 @@ export default function CareersCulture() {
         </div>
 
         <div className="culture-gallery">
-          {GALLERY.map((item) => (
+          {CAREER_CULTURE.map((item) => (
             <figure key={item.caption} className={`culture-shot ${item.className}`}>
               <img src={item.src} alt={item.caption} />
+              <div className="culture-caption-shade" aria-hidden="true" />
               <figcaption>{item.caption}</figcaption>
             </figure>
           ))}
@@ -48,13 +32,15 @@ export default function CareersCulture() {
 
       <style>{`
         .careers-culture {
-          padding: 40px 0 80px;
+          position: relative;
+          z-index: 1;
+          padding: 40px 0 40px;
           background: #FFFFFF;
         }
         .culture-header {
           text-align: center;
           max-width: 720px;
-          margin: 0 auto 40px;
+          margin: 0 auto 44px;
         }
         .section-pill {
           display: inline-flex;
@@ -77,6 +63,7 @@ export default function CareersCulture() {
         }
         .culture-header h2 {
           margin: 0 0 14px;
+          font-family: 'Poppins', sans-serif;
           font-size: 40px;
           line-height: 50px;
           font-weight: 600;
@@ -86,17 +73,18 @@ export default function CareersCulture() {
           color: var(--primary);
         }
         .culture-header p {
-          margin: 0;
+          margin: 0 auto;
+          max-width: 560px;
           font-size: 16px;
           line-height: 26px;
           color: var(--body);
         }
         .culture-gallery {
           display: grid;
-          grid-template-columns: 1.1fr 1fr;
+          grid-template-columns: 1.15fr 1fr;
           grid-template-rows: 1fr 1fr;
           gap: 20px;
-          min-height: 560px;
+          min-height: 580px;
         }
         .culture-shot {
           position: relative;
@@ -104,9 +92,14 @@ export default function CareersCulture() {
           border-radius: 24px;
           overflow: hidden;
           background: #EEF0F4;
+          min-height: 0;
         }
         .culture-shot.tall {
           grid-row: 1 / span 2;
+          min-height: 580px;
+        }
+        .culture-shot.wide {
+          min-height: 280px;
         }
         .culture-shot img {
           width: 100%;
@@ -114,15 +107,32 @@ export default function CareersCulture() {
           object-fit: cover;
           display: block;
         }
+        .culture-caption-shade {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          /* Figma: soft fade from mid → deep black under caption */
+          background: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0) 42%,
+            rgba(0, 0, 0, 0.22) 62%,
+            rgba(0, 0, 0, 0.62) 82%,
+            rgba(0, 0, 0, 0.86) 100%
+          );
+          pointer-events: none;
+        }
         .culture-shot figcaption {
           position: absolute;
-          left: 20px;
-          right: 20px;
-          bottom: 20px;
+          left: 24px;
+          right: 24px;
+          bottom: 24px;
+          z-index: 2;
           color: #FFFFFF;
-          font-size: 14px;
+          font-family: 'Poppins', sans-serif;
+          /* Figma caption ≈ 16–18px medium; use 18 for photo overlays */
+          font-size: 18px;
+          line-height: 26px;
           font-weight: 500;
-          text-shadow: 0 2px 12px rgba(15, 23, 42, 0.45);
         }
         @media (max-width: 900px) {
           .culture-gallery {
